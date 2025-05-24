@@ -1,7 +1,7 @@
 // screens/HomeScreen.js
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native'; // Para recarregar dados quando a tela volta ao foco
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, FlatList, StyleSheet, Text, View } from 'react-native';
 
 export default function HomeScreen({ navigation }) {

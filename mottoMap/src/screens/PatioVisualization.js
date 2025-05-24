@@ -1,5 +1,3 @@
-// screens/PatioVisualizacaoScreen.js
-import React from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 // Dados mockados para o pátio
