@@ -6,7 +6,7 @@ import React from 'react';
 import DetalhesMotoScreen from './screens/DetalhesMotoScreen';
 import FiliaisScreen from './screens/FiliaisScreen';
 import HomeScreen from './screens/HomeScreen';
-import PatioVisualizacaoScreen from './screens/PatioVisualizacaoScreen';
+import PatioVisualizacaoScreen from './screens/PatioVisualization';
 import RegistrarMotoScreen from './screens/RegistrarMotoScreen';
 
 const Stack = createStackNavigator();
