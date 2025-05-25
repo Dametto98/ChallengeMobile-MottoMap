@@ -1,4 +1,3 @@
-// screens/HomeScreen.js
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native'; // Para recarregar dados quando a tela volta ao foco
 import { useEffect, useState } from 'react';
@@ -34,18 +33,21 @@ export default function HomeScreen({ navigation }) {
             <View style={styles.buttonContainer}>
                 <Button
                     title="Visualizar Pátio"
+                    color={"#4CAF50"}
                     onPress={() => navigation.navigate('PatioVisualizacao')}
                 />
             </View>
             <View style={styles.buttonContainer}>
                 <Button
                     title="Registrar Nova Moto"
+                    color={"#4CAF50"}
                     onPress={() => navigation.navigate('RegistrarMoto')}
                 />
             </View>
             <View style={styles.buttonContainer}>
                 <Button
                     title="Ver Filiais"
+                    color={"#4CAF50"}
                     onPress={() => navigation.navigate('Filiais')}
                 />
             </View>
@@ -72,7 +74,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'flex-start', // Alterado para flex-start para acomodar a lista
+        justifyContent: 'flex-start',
         padding: 20,
     },
     title: {

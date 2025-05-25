@@ -1,16 +1,15 @@
-// screens/RegistrarMotoScreen.js
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Alert, Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
-// Mock de status para simplificar, poderia ser um Picker
+// Mock de status para simplifica
 const STATUS_OPCOES = ['PRONTA', 'MINHA_MOTTU', 'PROBLEMAS_SIMPLES', 'PROBLEMAS_GRAVES', 'IRRECUPERAVEL'];
 
 export default function RegistrarMotoScreen({ navigation }) {
     const [placa, setPlaca] = useState('');
     const [modelo, setModelo] = useState('');
     const [status, setStatus] = useState(STATUS_OPCOES[0]); // Default para o primeiro status
-    const [filial, setFilial] = useState(''); // Ex: 'Filial Centro'
+    const [filial, setFilial] = useState('');
     const [vagaLinha, setVagaLinha] = useState('');
     const [vagaColuna, setVagaColuna] = useState('');
 
@@ -51,7 +50,7 @@ export default function RegistrarMotoScreen({ navigation }) {
             setFilial('');
             setVagaLinha('');
             setVagaColuna('');
-            navigation.goBack(); // Ou navega para outra tela, como a Home
+            navigation.goBack(); 
         } catch (e) {
             console.error("Erro ao salvar moto no AsyncStorage", e);
             Alert.alert("Erro", "Não foi possível salvar a moto.");
@@ -74,15 +73,14 @@ export default function RegistrarMotoScreen({ navigation }) {
                 style={styles.input}
                 value={modelo}
                 onChangeText={setModelo}
-                placeholder="Ex: Honda Biz 125"
+                placeholder="Ex: Mottu SPORT"
             />
 
             <Text style={styles.label}>Status:</Text>
-            {/* Poderia ser um Picker aqui. Por simplicidade, um TextInput ou seleção mock */}
             <TextInput
                 style={styles.input}
                 value={status}
-                onChangeText={setStatus} // O ideal seria um Picker para limitar as opções
+                onChangeText={setStatus}
                 placeholder={`Ex: ${STATUS_OPCOES.join(', ')}`}
             />
             <Text style={styles.infoSmall}>Opções: {STATUS_OPCOES.join(', ')}</Text>
@@ -119,7 +117,7 @@ export default function RegistrarMotoScreen({ navigation }) {
                 <Text>{dadosAtuais}</Text>
             </View>
 
-            <Button title="Salvar Moto" onPress={handleSalvarMoto} />
+            <Button title="Salvar Moto" color={"#4CAF50"} onPress={handleSalvarMoto} />
         </ScrollView>
     );
 }
@@ -138,7 +136,7 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         padding: 10,
         borderRadius: 5,
-        marginBottom: 5, // Reduzido para caber o infoSmall
+        marginBottom: 5, 
         fontSize: 16,
     },
     infoSmall: {

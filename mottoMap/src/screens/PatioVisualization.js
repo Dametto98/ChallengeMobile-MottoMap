@@ -2,12 +2,12 @@ import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native
 
 // Dados mockados para o pátio
 const patioDataMock = [
-    { id: 'A1', ocupada: true, moto: { placa: 'ABC-1234', modelo: 'Honda Biz', status: 'PRONTA' } },
+    { id: 'A1', ocupada: true, moto: { placa: 'DFH-1B12', modelo: 'Honda POP 101I', status: 'PRONTA' } },
     { id: 'A2', ocupada: false, moto: null },
-    { id: 'A3', ocupada: true, moto: { placa: 'XYZ-9876', modelo: 'Yamaha Factor', status: 'PROBLEMAS_SIMPLES' } },
+    { id: 'A3', ocupada: true, moto: { placa: 'AID-1278', modelo: 'Mottu E-Max', status: 'PROBLEMAS_SIMPLES' } },
     { id: 'B1', ocupada: false, moto: null },
     { id: 'B2', ocupada: false, moto: null },
-    { id: 'B3', ocupada: true, moto: { placa: 'DEF-5678', modelo: 'Honda Pop', status: 'MINHA_MOTTU' } },
+    { id: 'B3', ocupada: true, moto: { placa: 'FDU-8C36', modelo: 'Mottu Sport', status: 'MINHA_MOTTU' } },
 ];
 
 export default function PatioVisualizacaoScreen({ navigation }) {

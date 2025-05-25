@@ -1,5 +1,3 @@
-// screens/DetalhesMotoScreen.js
-import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 export default function DetalhesMotoScreen({ route }) {
@@ -13,7 +11,6 @@ export default function DetalhesMotoScreen({ route }) {
                     <Text style={styles.detailItem}>Placa: {moto.placa}</Text>
                     <Text style={styles.detailItem}>Modelo: {moto.modelo}</Text>
                     <Text style={styles.detailItem}>Status: {moto.status}</Text>
-                    {/* Adicione mais detalhes conforme necessário */}
                 </>
             ) : (
                 <Text>Nenhuma informação da moto disponível.</Text>
