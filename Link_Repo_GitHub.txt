@@ -1,2 +1,2 @@
 Link do repositório do projeto:
-https://github.com/Dametto98/frontChallenge
+https://github.com/Dametto98/ChallengeMobile-MottoMap
