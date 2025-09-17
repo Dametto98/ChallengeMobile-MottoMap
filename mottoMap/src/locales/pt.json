@@ -1,0 +1,12 @@
+{
+  "translation": {
+    "welcome": "Bem-vindo ao MotoMap",
+    "email": "E-mail",
+    "password": "Senha",
+    "loginButton": "Entrar",
+    "registerPrompt": "Não tem uma conta?",
+    "registerLink": "Cadastre-se",
+    "errorFillFields": "Por favor, preencha todos os campos.",
+    "errorInvalidCredentials": "Usuário ou senha inválidos."
+  }
+}

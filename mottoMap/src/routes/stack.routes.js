@@ -3,8 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { useAuth } from '../contexts/AuthContext';
 import LoginScreen from '../screens/LoginScreen';
-// Importe a tela de cadastro se for criá-la
-// import CadastroScreen from '../screens/CadastroScreen'; 
+import CadastroScreen from '../screens/CadastroScreen'; 
 
 import DetalhesMotoScreen from '../screens/DetalhesMotoScreen';
 import FiliaisScreen from '../screens/FiliaisScreen';
@@ -18,7 +17,7 @@ function AuthRoutes() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-      {/* <Stack.Screen name="Cadastro" component={CadastroScreen} options={{ title: 'Crie sua Conta' }} /> */}
+      {<Stack.Screen name="Cadastro" component={CadastroScreen} options={{ title: 'Crie sua Conta' }} />}
     </Stack.Navigator>
   );
 }

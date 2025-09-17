@@ -1,3 +1,4 @@
+import './src/i18n';
 import { AuthProvider } from "./src/contexts/AuthContext";
 import StackNavigator from "./src/routes/stack.routes";
 
