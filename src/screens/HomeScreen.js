@@ -1,123 +1,104 @@
-import React, { useState, useCallback } from 'react';
-import { View, Text, Button, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Button } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../theme';
-import { apiJava } from '../services/api';
 
 export default function HomeScreen({ navigation }) {
-    const [motos, setMotos] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const { signOut } = useAuth();
+    const { signOut, user } = useAuth();
     const theme = useTheme();
     const styles = getStyles(theme);
 
-    const carregarMotos = async () => {
-        setLoading(true);
-        try {
-            const response = await apiJava.get('/moto');
-            // A API retorna um objeto paginado, os dados estão em 'content'
-            setMotos(response.data.content || []); 
-        } catch (error) {
-            console.error("Erro ao carregar motos:", error);
-            Alert.alert("Erro", "Não foi possível carregar a lista de motos.");
-            setMotos([]);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // useFocusEffect recarrega os dados toda vez que a tela recebe foco
-    useFocusEffect(
-        useCallback(() => {
-            carregarMotos();
-        }, [])
-    );
-
-    const renderMotoItem = ({ item }) => (
-        <TouchableOpacity 
-            style={styles.motoItem}
-            onPress={() => navigation.navigate('DetalhesMoto', { motoId: item.id })}
-        >
-            <Text style={styles.motoItemText}>Placa: {item.placa}</Text>
-            <Text style={styles.motoItemTextSecondary}>Modelo: {item.modeloMoto}</Text>
-        </TouchableOpacity>
-    );
+    // Mensagem de boas-vindas. Se o user tiver um nome, usa, senão, um genérico.
+    const welcomeMessage = user?.name ? `Bem-vindo(a), ${user.name}!` : "Bem-vindo(a)!";
 
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.title}>Motos da Frota</Text>
-                <Button
-                    title="Registrar Nova Moto"
-                    color={theme.primary}
-                    onPress={() => navigation.navigate('RegistrarMoto')}
-                />
-            </View>
+        <SafeAreaView style={styles.safeArea}>
+            <View style={styles.container}>
+                <View style={styles.header}>
+                    <Text style={styles.title}>{welcomeMessage}</Text>
+                    <Text style={styles.subtitle}>Selecione uma opção para começar</Text>
+                </View>
 
-            {loading ? (
-                <ActivityIndicator size="large" color={theme.primary} style={{ flex: 1 }} />
-            ) : (
-                <FlatList
-                    data={motos}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={renderMotoItem}
-                    ListEmptyComponent={<Text style={styles.emptyListText}>Nenhuma moto encontrada.</Text>}
-                    contentContainerStyle={{ paddingHorizontal: 10 }}
-                    onRefresh={carregarMotos} // Puxar para atualizar
-                    refreshing={loading}
-                />
-            )}
-            
-            <View style={styles.logoutButtonContainer}>
-                <Button title="Sair (Logout)" color={theme.danger} onPress={signOut} />
+                <View style={styles.menuContainer}>
+                    <TouchableOpacity 
+                        style={styles.menuButton} 
+                        onPress={() => navigation.navigate('MotosList')}
+                    >
+                        <Text style={styles.menuButtonText}>🏍️ Gerenciar Motos</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity 
+                        style={styles.menuButton} 
+                        onPress={() => navigation.navigate('PatioVisualizacao')}
+                    >
+                        <Text style={styles.menuButtonText}>🅿️ Visualizar Pátio</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity 
+                        style={styles.menuButton} 
+                        onPress={() => navigation.navigate('Filiais')}
+                    >
+                        <Text style={styles.menuButtonText}>🏢 Nossas Filiais</Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.logoutButtonContainer}>
+                    <Button title="Sair do App" color={theme.danger} onPress={signOut} />
+                </View>
             </View>
-        </View>
+        </SafeAreaView>
     );
 }
 
 const getStyles = (theme) => StyleSheet.create({
-    container: {
+    safeArea: {
         flex: 1,
         backgroundColor: theme.background,
     },
+    container: {
+        flex: 1,
+        justifyContent: 'space-between', // Empurra o logout para baixo
+    },
     header: {
-        padding: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: theme.border,
+        padding: 20,
+        paddingTop: 40,
+        alignItems: 'center',
     },
     title: {
-        fontSize: 24,
+        fontSize: 26,
         fontWeight: 'bold',
         color: theme.text,
-        marginBottom: 10,
-        textAlign: 'center',
     },
-    motoItem: {
-        backgroundColor: theme.card,
-        padding: 15,
-        marginVertical: 8,
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: theme.border,
-    },
-    motoItemText: {
+    subtitle: {
         fontSize: 16,
-        fontWeight: 'bold',
+        color: theme.textSecondary,
+        marginTop: 8,
+    },
+    menuContainer: {
+        paddingHorizontal: 20,
+    },
+    menuButton: {
+        backgroundColor: theme.card,
+        padding: 20,
+        borderRadius: 12,
+        marginVertical: 10,
+        alignItems: 'center',
+        // Sombra
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    menuButtonText: {
+        fontSize: 18,
+        fontWeight: '600',
         color: theme.text,
-    },
-    motoItemTextSecondary: {
-        fontSize: 14,
-        color: theme.textSecondary,
-    },
-    emptyListText: {
-        textAlign: 'center',
-        marginTop: 50,
-        color: theme.textSecondary,
     },
     logoutButtonContainer: {
-        padding: 15,
-        borderTopWidth: 1,
-        borderTopColor: theme.border,
+        padding: 20,
     }
 });
