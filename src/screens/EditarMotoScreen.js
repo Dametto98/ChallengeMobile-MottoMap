@@ -3,21 +3,22 @@ import { ScrollView, View, Text, TextInput, Button, StyleSheet, ActivityIndicato
 import { useTheme } from '../theme';
 import { apiJava } from '../services/api';
 
-export default function RegistrarMotoScreen({ navigation }) {
+export default function EditarMotoScreen({ route, navigation }) {
+    const { moto } = route.params; // Recebe os dados da moto a ser editada
     const theme = useTheme();
     const styles = getStyles(theme);
 
-    const [placa, setPlaca] = useState('');
-    const [chassi, setChassi] = useState('');
-    const [modeloMoto, setModeloMoto] = useState('');
-    const [ano, setAno] = useState('');
-    const [statusMoto, setStatusMoto] = useState('ATIVA'); // Valor padrão
-    const [idFilial, setIdFilial] = useState('1'); // Valor padrão
+    // Pré-popula os estados com os dados da moto existente
+    const [placa, setPlaca] = useState(moto.placa);
+    const [chassi, setChassi] = useState(moto.chassi);
+    const [modeloMoto, setModeloMoto] = useState(moto.modeloMoto);
+    const [ano, setAno] = useState(moto.ano.toString());
+    const [statusMoto, setStatusMoto] = useState(moto.statusMoto);
+    const [idFilial, setIdFilial] = useState(moto.filial.id.toString());
     
     const [loading, setLoading] = useState(false);
-    const [errors, setErrors] = useState({}); // Estado para os erros
+    const [errors, setErrors] = useState({});
 
-    // Função de validação
     const validate = () => {
         const newErrors = {};
         if (!placa) newErrors.placa = "A placa é obrigatória.";
@@ -28,13 +29,12 @@ export default function RegistrarMotoScreen({ navigation }) {
         else if (isNaN(ano)) newErrors.ano = "O ano deve ser um número.";
 
         setErrors(newErrors);
-        // Retorna true se não houver erros
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSave = async () => {
+    const handleUpdate = async () => {
         if (!validate()) {
-            return; // Para a execução se a validação falhar
+            return; // Interrompe se a validação falhar
         }
         
         setLoading(true);
@@ -48,12 +48,12 @@ export default function RegistrarMotoScreen({ navigation }) {
         };
 
         try {
-            await apiJava.post('/moto', motoData);
-            Alert.alert("Sucesso!", "Nova moto registrada.");
+            await apiJava.put(`/moto/${moto.id}`, motoData);
+            Alert.alert("Sucesso!", "Moto atualizada com sucesso.");
             navigation.goBack();
         } catch (error) {
-            console.error("Erro ao salvar moto:", error.response?.data || error);
-            Alert.alert("Erro", "Não foi possível registrar a nova moto.");
+            console.error("Erro ao atualizar moto:", error.response?.data || error);
+            Alert.alert("Erro", "Não foi possível atualizar a moto.");
         } finally {
             setLoading(false);
         }
@@ -62,26 +62,29 @@ export default function RegistrarMotoScreen({ navigation }) {
     return (
         <ScrollView style={styles.container}>
             <Text style={styles.label}>Placa</Text>
-            <TextInput style={styles.input} value={placa} onChangeText={setPlaca} placeholder="Ex: BRA2E19" autoCapitalize="characters" />
+            <TextInput style={styles.input} value={placa} onChangeText={setPlaca} autoCapitalize="characters" />
             {errors.placa && <Text style={styles.errorText}>{errors.placa}</Text>}
 
             <Text style={styles.label}>Chassi</Text>
-            <TextInput style={styles.input} value={chassi} onChangeText={setChassi} placeholder="17 caracteres" maxLength={17} />
+            <TextInput style={styles.input} value={chassi} onChangeText={setChassi} maxLength={17} />
             {errors.chassi && <Text style={styles.errorText}>{errors.chassi}</Text>}
             
             <Text style={styles.label}>Modelo</Text>
-            <TextInput style={styles.input} value={modeloMoto} onChangeText={setModeloMoto} placeholder="Ex: POP_110I" />
+            <TextInput style={styles.input} value={modeloMoto} onChangeText={setModeloMoto} />
             {errors.modeloMoto && <Text style={styles.errorText}>{errors.modeloMoto}</Text>}
             
             <Text style={styles.label}>Ano</Text>
-            <TextInput style={styles.input} value={ano} onChangeText={setAno} placeholder="Ex: 2024" keyboardType="numeric" />
+            <TextInput style={styles.input} value={ano} onChangeText={setAno} keyboardType="numeric" />
             {errors.ano && <Text style={styles.errorText}>{errors.ano}</Text>}
+
+            <Text style={styles.label}>Status</Text>
+            <TextInput style={styles.input} value={statusMoto} onChangeText={setStatusMoto} />
             
             {loading ? (
                 <ActivityIndicator size="large" color={theme.primary} style={{ marginTop: 20 }} />
             ) : (
                 <View style={styles.buttonContainer}>
-                    <Button title="Salvar Nova Moto" onPress={handleSave} color={theme.primary} />
+                    <Button title="Salvar Alterações" onPress={handleUpdate} color={theme.primary} />
                 </View>
             )}
         </ScrollView>

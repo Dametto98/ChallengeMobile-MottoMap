@@ -1,91 +1,76 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useIsFocused } from '@react-navigation/native';
-import { useEffect, useState } from 'react';
-import { Button, FlatList, StyleSheet, Text, View } from 'react-native';
-
-// Nossos novos hooks customizados
+import React, { useState, useCallback } from 'react';
+import { View, Text, Button, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../theme';
+import { apiJava } from '../services/api';
 
 export default function HomeScreen({ navigation }) {
-    const [motosSalvas, setMotosSalvas] = useState([]);
-    const isFocused = useIsFocused(); // Hook para saber se a tela está em foco
-    const { signOut } = useAuth(); // Função de logout do nosso contexto
-    const theme = useTheme(); // cores do tema ativo (claro ou escuro)
-
+    const [motos, setMotos] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const { signOut } = useAuth();
+    const theme = useTheme();
     const styles = getStyles(theme);
 
     const carregarMotos = async () => {
+        setLoading(true);
         try {
-            const motosJson = await AsyncStorage.getItem('motos_data');
-            if (motosJson !== null) {
-                setMotosSalvas(JSON.parse(motosJson));
-            } else {
-                setMotosSalvas([]);
-            }
-        } catch (e) {
-            console.error("Erro ao carregar motos do AsyncStorage", e);
-            setMotosSalvas([]);
+            const response = await apiJava.get('/moto');
+            // A API retorna um objeto paginado, os dados estão em 'content'
+            setMotos(response.data.content || []); 
+        } catch (error) {
+            console.error("Erro ao carregar motos:", error);
+            Alert.alert("Erro", "Não foi possível carregar a lista de motos.");
+            setMotos([]);
+        } finally {
+            setLoading(false);
         }
     };
 
-    useEffect(() => {
-        if (isFocused) {
+    // useFocusEffect recarrega os dados toda vez que a tela recebe foco
+    useFocusEffect(
+        useCallback(() => {
             carregarMotos();
-        }
-    }, [isFocused]);
+        }, [])
+    );
+
+    const renderMotoItem = ({ item }) => (
+        <TouchableOpacity 
+            style={styles.motoItem}
+            onPress={() => navigation.navigate('DetalhesMoto', { motoId: item.id })}
+        >
+            <Text style={styles.motoItemText}>Placa: {item.placa}</Text>
+            <Text style={styles.motoItemTextSecondary}>Modelo: {item.modeloMoto}</Text>
+        </TouchableOpacity>
+    );
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Bem-vindo ao MotoMap!</Text>
-
-            <View style={styles.buttonContainer}>
-                <Button
-                    title="Visualizar Pátio"
-                    color={theme.primary}
-                    onPress={() => navigation.navigate('PatioVisualizacao')}
-                />
-            </View>
-            <View style={styles.buttonContainer}>
+            <View style={styles.header}>
+                <Text style={styles.title}>Motos da Frota</Text>
                 <Button
                     title="Registrar Nova Moto"
                     color={theme.primary}
                     onPress={() => navigation.navigate('RegistrarMoto')}
                 />
             </View>
-            <View style={styles.buttonContainer}>
-                <Button
-                    title="Ver Filiais"
-                    color={theme.primary}
-                    onPress={() => navigation.navigate('Filiais')}
-                />
-            </View>
 
-            <Text style={styles.listTitle}>Motos Registradas Localmente ({motosSalvas.length}):</Text>
-            {motosSalvas.length === 0 ? (
-                <Text style={styles.emptyListText}>Nenhuma moto registrada localmente.</Text>
+            {loading ? (
+                <ActivityIndicator size="large" color={theme.primary} style={{ flex: 1 }} />
             ) : (
                 <FlatList
-                    style={styles.list}
-                    data={motosSalvas}
-                    keyExtractor={(item, index) => item.placa + index}
-                    renderItem={({ item }) => (
-                        <View style={styles.motoItem}>
-                            <Text style={styles.motoItemText}>
-                                Placa: {item.placa} - Modelo: {item.modelo} - Status: {item.status}
-                            </Text>
-                        </View>
-                    )}
+                    data={motos}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={renderMotoItem}
+                    ListEmptyComponent={<Text style={styles.emptyListText}>Nenhuma moto encontrada.</Text>}
+                    contentContainerStyle={{ paddingHorizontal: 10 }}
+                    onRefresh={carregarMotos} // Puxar para atualizar
+                    refreshing={loading}
                 />
             )}
-
-            {/* Botão de Logout adicionado no final */}
+            
             <View style={styles.logoutButtonContainer}>
-                <Button
-                    title="Sair (Logout)"
-                    color={theme.danger} // Usando a cor de perigo do tema
-                    onPress={signOut}
-                />
+                <Button title="Sair (Logout)" color={theme.danger} onPress={signOut} />
             </View>
         </View>
     );
@@ -94,46 +79,45 @@ export default function HomeScreen({ navigation }) {
 const getStyles = (theme) => StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        paddingVertical: 20,
-        paddingHorizontal: 10,
-        backgroundColor: theme.background, // Cor de fundo do tema
+        backgroundColor: theme.background,
     },
-    title: {
-        fontSize: 22,
-        fontWeight: 'bold',
-        marginBottom: 20,
-        color: theme.text, // Cor do texto do tema
-    },
-    buttonContainer: {
-        width: '80%',
-        marginVertical: 8,
-    },
-    listTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginTop: 30,
-        marginBottom: 10,
-        color: theme.text,
-    },
-    list: {
-      width: '100%',
-    },
-    emptyListText: {
-        color: theme.textSecondary, // Cor de texto secundário
-    },
-    motoItem: {
+    header: {
         padding: 15,
         borderBottomWidth: 1,
-        borderBottomColor: theme.border, // Cor da borda do tema
-        width: '100%'
+        borderBottomColor: theme.border,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: theme.text,
+        marginBottom: 10,
+        textAlign: 'center',
+    },
+    motoItem: {
+        backgroundColor: theme.card,
+        padding: 15,
+        marginVertical: 8,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: theme.border,
     },
     motoItemText: {
+        fontSize: 16,
+        fontWeight: 'bold',
         color: theme.text,
     },
+    motoItemTextSecondary: {
+        fontSize: 14,
+        color: theme.textSecondary,
+    },
+    emptyListText: {
+        textAlign: 'center',
+        marginTop: 50,
+        color: theme.textSecondary,
+    },
     logoutButtonContainer: {
-        width: '80%',
-        marginTop: 'auto', // Empurra o botão para o final da tela
-        marginBottom: 10,
+        padding: 15,
+        borderTopWidth: 1,
+        borderTopColor: theme.border,
     }
 });
