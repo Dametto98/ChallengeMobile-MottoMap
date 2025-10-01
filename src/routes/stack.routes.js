@@ -11,6 +11,9 @@ import HomeScreen from '../screens/HomeScreen';
 import PatioVisualizacaoScreen from '../screens/PatioVisualization';
 import RegistrarMotoScreen from '../screens/RegistrarMotoScreen';
 import EditarMotoScreen from '../screens/EditarMotoScreen';
+import EditarFilialScreen from '../screens/EditarFilialScreen';
+import RegistrarFilialScreen from '../screens/RegistrarFilialScreen';
+import DetalhesFilialScreen from '../screens/DetalhesFilialScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +35,9 @@ function AppRoutes() {
       <Stack.Screen name="DetalhesMoto" component={DetalhesMotoScreen} options={{ title: 'Detalhes da Moto' }} />
       <Stack.Screen name="EditarMoto" component={EditarMotoScreen} options={{ title: 'Editar Moto' }} />
       <Stack.Screen name="Filiais" component={FiliaisScreen} options={{ title: 'Nossas Filiais' }} />
+      <Stack.Screen name="DetalhesFilial" component={DetalhesFilialScreen} options={{ title: 'Detalhes da Filial' }} />
+      <Stack.Screen name="RegistrarFilial" component={RegistrarFilialScreen} options={{ title: 'Registrar Nova Filial' }} />
+      <Stack.Screen name="EditarFilial" component={EditarFilialScreen} options={{ title: 'Editar Filial' }} />
     </Stack.Navigator>
   );
 }
