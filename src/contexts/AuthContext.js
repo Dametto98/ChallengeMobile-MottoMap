@@ -1,34 +1,61 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { apiJava } from '../services/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null); // Se for null, não está logado
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function loadStorageData() {
+            const storagedUser = await AsyncStorage.getItem('@MottoMap:user');
+            const storagedToken = await AsyncStorage.getItem('@MottoMap:token');
+
+            if (storagedUser && storagedToken) {
+                setUser(JSON.parse(storagedUser));
+            }
+            setLoading(false);
+        }
+        loadStorageData();
+    }, []);
 
     const signIn = async (email, password) => {
-        console.log("Tentando login com:", email, password);
-        // Aqui entraria a chamada para a API .NET
-        // Por enquanto, vamos simular sucesso após 1 segundo
-        return new Promise(resolve => {
-            setTimeout(() => {
-                setUser({ name: 'Usuário Mock', email: email });
-                resolve();
-            }, 1000);
-        });
+        try {
+            const response = await apiJava.post('/usuario/login', {
+                email: email,
+                senha: password, // O backend espera 'senha'
+            });
+
+            const { token } = response.data;
+
+            // Para obter os dados do usuário, precisaríamos de outro endpoint ou que o login retornasse mais dados
+            // Por simplicidade, vamos armazenar apenas o email por enquanto
+            const userData = { email };
+            setUser(userData);
+
+            await AsyncStorage.setItem('@MottoMap:user', JSON.stringify(userData));
+            await AsyncStorage.setItem('@MottoMap:token', token);
+
+        } catch (error) {
+            console.error("Erro no login:", error.response?.data || error.message);
+            throw new Error('Credenciais inválidas. Verifique seu e-mail e senha.');
+        }
     };
 
-    const signOut = () => {
+    const signOut = async () => {
+        await AsyncStorage.clear();
         setUser(null);
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated: !!user, user, signIn, signOut }}>
+        <AuthContext.Provider value={{ isAuthenticated: !!user, user, signIn, signOut, loading }}>
             {children}
         </AuthContext.Provider>
     );
 };
 
-// Hook para facilitar o uso do contexto
 export const useAuth = () => {
     return useContext(AuthContext);
 };

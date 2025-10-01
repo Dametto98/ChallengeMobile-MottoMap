@@ -1,158 +1,77 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Alert, Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { apiJava } from '../services/api';
 
-// Mock de status para simplifica
-const STATUS_OPCOES = ['PRONTA', 'MINHA_MOTTU', 'PROBLEMAS_SIMPLES', 'PROBLEMAS_GRAVES', 'IRRECUPERAVEL'];
+const STATUS_OPCOES = ['ATIVA', 'INATIVA'];
+const MODELO_OPCOES = ['POP_110I', 'SPORT_110I']; // Adapte para os modelos do seu ENUM
 
 export default function RegistrarMotoScreen({ navigation }) {
     const [placa, setPlaca] = useState('');
     const [modelo, setModelo] = useState('');
-    const [status, setStatus] = useState(STATUS_OPCOES[0]); // Default para o primeiro status
-    const [filial, setFilial] = useState('');
-    const [vagaLinha, setVagaLinha] = useState('');
-    const [vagaColuna, setVagaColuna] = useState('');
-
-    // Exibe os dados digitados dinamicamente
-    const dadosAtuais = `Placa: ${placa}\nModelo: ${modelo}\nStatus: ${status}\nFilial: ${filial}\nVaga: L${vagaLinha}C${vagaColuna}`;
+    const [status, setStatus] = useState(STATUS_OPCOES[0]);
+    const [filial, setFilial] = useState('1'); // ID da filial, ex: "1"
+    const [chassi, setChassi] = useState(''); // NOVO
+    const [ano, setAno] = useState(''); // NOVO
 
     const handleSalvarMoto = async () => {
-        if (!placa || !modelo || !status || !filial || !vagaLinha || !vagaColuna) {
+        if (!placa || !modelo || !status || !filial || !chassi || !ano) {
             Alert.alert("Erro", "Todos os campos são obrigatórios!");
             return;
         }
 
         const novaMoto = {
             placa,
-            modelo,
-            status,
-            filial,
-            vaga: `L${vagaLinha}C${vagaColuna}`,
-            timestamp: new Date().toISOString() // Para ter um ID ou data de registro
+            chassi,
+            modeloMoto: modelo,
+            ano: parseInt(ano),
+            statusMoto: status,
+            filial: parseInt(filial)
         };
 
         try {
-            // Carrega motos existentes
-            const motosJson = await AsyncStorage.getItem('motos_data');
-            let motosArray = motosJson ? JSON.parse(motosJson) : [];
-
-            // Adiciona nova moto
-            motosArray.push(novaMoto);
-
-            // Salva array atualizado
-            await AsyncStorage.setItem('motos_data', JSON.stringify(motosArray));
-
-            Alert.alert("Sucesso", "Moto registrada localmente!");
-            // Limpar formulário
-            setPlaca('');
-            setModelo('');
-            setStatus(STATUS_OPCOES[0]);
-            setFilial('');
-            setVagaLinha('');
-            setVagaColuna('');
-            navigation.goBack(); 
+            await apiJava.post('/moto', novaMoto);
+            Alert.alert("Sucesso", "Moto registrada no sistema!");
+            navigation.goBack();
         } catch (e) {
-            console.error("Erro ao salvar moto no AsyncStorage", e);
-            Alert.alert("Erro", "Não foi possível salvar a moto.");
+            console.error("Erro ao salvar moto:", e.response?.data || e.message);
+            Alert.alert("Erro", "Não foi possível registrar a moto no sistema.");
         }
     };
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.label}>Placa da Moto:</Text>
-            <TextInput
-                style={styles.input}
-                value={placa}
-                onChangeText={setPlaca}
-                placeholder="Ex: ABC-1234"
-                autoCapitalize="characters"
-            />
+            <TextInput style={styles.input} value={placa} onChangeText={setPlaca} placeholder="Ex: ABC1D23" />
+            
+            {/* NOVO CAMPO */}
+            <Text style={styles.label}>Chassi:</Text>
+            <TextInput style={styles.input} value={chassi} onChangeText={setChassi} placeholder="17 caracteres do chassi" />
 
             <Text style={styles.label}>Modelo:</Text>
-            <TextInput
-                style={styles.input}
-                value={modelo}
-                onChangeText={setModelo}
-                placeholder="Ex: Mottu SPORT"
-            />
+            <TextInput style={styles.input} value={modelo} onChangeText={setModelo} placeholder={`Ex: ${MODELO_OPCOES.join(', ')}`} />
+            <Text style={styles.infoSmall}>Opções: {MODELO_OPCOES.join(', ')}</Text>
+
+            {/* NOVO CAMPO */}
+            <Text style={styles.label}>Ano:</Text>
+            <TextInput style={styles.input} value={ano} onChangeText={setAno} placeholder="Ex: 2023" keyboardType="numeric" />
 
             <Text style={styles.label}>Status:</Text>
-            <TextInput
-                style={styles.input}
-                value={status}
-                onChangeText={setStatus}
-                placeholder={`Ex: ${STATUS_OPCOES.join(', ')}`}
-            />
+            <TextInput style={styles.input} value={status} onChangeText={setStatus} placeholder={`Ex: ${STATUS_OPCOES.join(', ')}`} />
             <Text style={styles.infoSmall}>Opções: {STATUS_OPCOES.join(', ')}</Text>
 
+            <Text style={styles.label}>ID da Filial:</Text>
+            <TextInput style={styles.input} value={filial} onChangeText={setFilial} placeholder="Ex: 1" keyboardType="numeric" />
 
-            <Text style={styles.label}>Filial:</Text>
-            <TextInput
-                style={styles.input}
-                value={filial}
-                onChangeText={setFilial}
-                placeholder="Ex: Filial Centro"
-            />
-
-            <Text style={styles.label}>Vaga - Linha:</Text>
-            <TextInput
-                style={styles.input}
-                value={vagaLinha}
-                onChangeText={setVagaLinha}
-                placeholder="Ex: A"
-                keyboardType="default"
-            />
-
-            <Text style={styles.label}>Vaga - Coluna:</Text>
-            <TextInput
-                style={styles.input}
-                value={vagaColuna}
-                onChangeText={setVagaColuna}
-                placeholder="Ex: 01"
-                keyboardType="numeric"
-            />
-
-            <View style={styles.dadosDinamicosContainer}>
-                <Text style={styles.dadosDinamicosTitle}>Dados Sendo Inseridos:</Text>
-                <Text>{dadosAtuais}</Text>
+            <View style={{marginTop: 20}}>
+              <Button title="Salvar Moto" color={"#4CAF50"} onPress={handleSalvarMoto} />
             </View>
-
-            <Button title="Salvar Moto" color={"#4CAF50"} onPress={handleSalvarMoto} />
         </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        padding: 20,
-    },
-    label: {
-        fontSize: 16,
-        marginBottom: 5,
-        marginTop: 10,
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        padding: 10,
-        borderRadius: 5,
-        marginBottom: 5, 
-        fontSize: 16,
-    },
-    infoSmall: {
-        fontSize: 12,
-        color: '#666',
-        marginBottom: 10,
-    },
-    dadosDinamicosContainer: {
-        marginTop: 20,
-        marginBottom: 20,
-        padding: 10,
-        backgroundColor: '#f0f0f0',
-        borderRadius: 5,
-    },
-    dadosDinamicosTitle: {
-        fontWeight: 'bold',
-        marginBottom: 5,
-    },
+    container: { padding: 20 },
+    label: { fontSize: 16, marginBottom: 5, marginTop: 10 },
+    input: { borderWidth: 1, borderColor: '#ccc', padding: 10, borderRadius: 5, marginBottom: 5, fontSize: 16 },
+    infoSmall: { fontSize: 12, color: '#666', marginBottom: 10 },
 });
