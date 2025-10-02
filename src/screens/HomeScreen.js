@@ -31,13 +31,6 @@ export default function HomeScreen({ navigation }) {
 
                     <TouchableOpacity 
                         style={styles.menuButton} 
-                        onPress={() => navigation.navigate('PatioVisualizacao')}
-                    >
-                        <Text style={styles.menuButtonText}>🅿️ Visualizar Pátio</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity 
-                        style={styles.menuButton} 
                         onPress={() => navigation.navigate('Filiais')}
                     >
                         <Text style={styles.menuButtonText}>🏢 Nossas Filiais</Text>
