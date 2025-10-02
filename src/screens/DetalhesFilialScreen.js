@@ -1,15 +1,17 @@
-import React, { useState, useCallback } from 'react';
+import { SafeAreaView } from "react-native-safe-area-context"
+import { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, Button, Alert, ActivityIndicator, ScrollView } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import { useTheme } from '../theme';
+import { useTheme } from '../contexts/ThemeContext'; 
 import { apiJava } from '../services/api';
 
 export default function DetalhesFilialScreen({ route, navigation }) {
     const { filialId } = route.params;
     const [filial, setFilial] = useState(null);
     const [loading, setLoading] = useState(true);
-    const theme = useTheme();
-    const styles = getStyles(theme);
+
+    const { colors } = useTheme(); 
+    const styles = getStyles(colors); 
 
     const carregarDetalhes = async () => {
         if (!filialId) return;
@@ -59,7 +61,11 @@ export default function DetalhesFilialScreen({ route, navigation }) {
     };
 
     if (loading || !filial) {
-        return <View style={styles.centered}><ActivityIndicator size="large" color={theme.primary} /></View>;
+        return (
+            <View style={styles.centered}>
+                <ActivityIndicator size="large" color={colors.primary} />
+            </View>
+        );
     }
     
     return (
@@ -76,21 +82,25 @@ export default function DetalhesFilialScreen({ route, navigation }) {
                 <Button 
                     title="Editar Filial" 
                     onPress={() => navigation.navigate('EditarFilial', { filial: filial })} 
-                    color={theme.primary} 
+                    color={colors.primary} 
                 />
             </View>
             <View style={styles.buttonContainer}>
-                <Button title="Apagar Filial" onPress={handleDelete} color={theme.danger} />
+                <Button 
+                    title="Apagar Filial" 
+                    onPress={handleDelete} 
+                    color={colors.danger} 
+                />
             </View>
         </ScrollView>
     );
 }
 
-const getStyles = (theme) => StyleSheet.create({
-    container: { flex: 1, padding: 20, backgroundColor: theme.background },
-    centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-    title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20, textAlign: 'center', color: theme.text },
-    detailsCard: { backgroundColor: theme.card, padding: 20, borderRadius: 10, marginBottom: 20 },
-    detailItem: { fontSize: 18, marginBottom: 10, color: theme.text },
+const getStyles = (colors) => StyleSheet.create({
+    container: { flex: 1, padding: 20, backgroundColor: colors.background },
+    centered: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background },
+    title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20, textAlign: 'center', color: colors.text },
+    detailsCard: { backgroundColor: colors.card, padding: 20, borderRadius: 12, marginBottom: 20, elevation: 2 },
+    detailItem: { fontSize: 18, marginBottom: 10, color: colors.text },
     buttonContainer: { marginVertical: 10 }
 });

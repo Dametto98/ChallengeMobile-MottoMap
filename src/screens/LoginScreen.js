@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context"
+import { useState } from 'react';
+import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
-import { useTheme } from '../theme';
+import { useTheme } from '../contexts/ThemeContext'; 
 import { useTranslation } from 'react-i18next'; 
 
 export default function LoginScreen({ navigation }) {
@@ -11,9 +12,9 @@ export default function LoginScreen({ navigation }) {
     const [error, setError] = useState('');
     
     const { signIn } = useAuth();
-    const theme = useTheme();
+    const { colors } = useTheme(); 
     const { t } = useTranslation(); 
-    const styles = getStyles(theme);
+    const styles = getStyles(colors); 
 
     const handleLogin = async () => {
         if (!email || !password) {
@@ -31,92 +32,121 @@ export default function LoginScreen({ navigation }) {
     };
 
     return (
-        <View style={styles.container}>
-            {/* 4. SUBSTITUA TODO TEXTO FIXO PELA FUNÇÃO t('chave') */}
-            <Text style={styles.title}>{t('welcome')}</Text>
-            
-            {error && <Text style={styles.errorText}>{error}</Text>}
-            
-            <TextInput
-                style={styles.input}
-                placeholder={t('email')}
-                placeholderTextColor={theme.textSecondary}
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-            />
-            <TextInput
-                style={styles.input}
-                placeholder={t('password')}
-                placeholderTextColor={theme.textSecondary}
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-            />
-            
-            {loading ? (
-                <ActivityIndicator size="large" color={theme.primary} />
-            ) : (
-                <View style={styles.buttonContainer}>
-                    <Button title={t('loginButton')} onPress={handleLogin} color={theme.primary} />
-                </View>
-            )}
-            
-            <TouchableOpacity 
-                style={styles.cadastroLink}
-                onPress={() => navigation.navigate('Cadastro')}
-            >
-                <Text style={styles.cadastroText}>
-                    {t('registerPrompt')} <Text style={styles.cadastroTextBold}>{t('registerLink')}</Text>
-                </Text>
-            </TouchableOpacity>
-        </View>
+        <SafeAreaView style={styles.container}>
+            <View style={styles.content}>
+                <Image 
+                    source={require('../../assets/images/mottomap-logo.png')} 
+                    style={styles.logo}
+                />
+                
+                <Text style={styles.title}>{t('welcome')}</Text>
+                <Text style={styles.subtitle}>Faça login para continuar</Text>
+                
+                {error && <Text style={styles.errorText}>{error}</Text>}
+                
+                <TextInput
+                    style={styles.input}
+                    placeholder={t('email')}
+                    placeholderTextColor={colors.textSecondary} // 4. Usamos 'colors' aqui
+                    value={email}
+                    onChangeText={setEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder={t('password')}
+                    placeholderTextColor={colors.textSecondary} // 4. Usamos 'colors' aqui
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry
+                />
+                
+                {loading ? (
+                    <ActivityIndicator size="large" color={colors.primary} style={{marginVertical: 10}} />
+                ) : (
+                    <View style={styles.buttonContainer}>
+                        <Button title={t('loginButton')} onPress={handleLogin} color={colors.primary} />
+                    </View>
+                )}
+                
+                <TouchableOpacity 
+                    style={styles.cadastroLink}
+                    onPress={() => navigation.navigate('Cadastro')}
+                >
+                    <Text style={styles.cadastroText}>
+                        {t('registerPrompt')} <Text style={styles.cadastroTextBold}>{t('registerLink')}</Text>
+                    </Text>
+                </TouchableOpacity>
+            </View>
+        </SafeAreaView>
     );
 }
 
-const getStyles = (theme) => StyleSheet.create({
+// 5. A função agora recebe 'colors' e usa suas propriedades
+const getStyles = (colors) => StyleSheet.create({
     container: {
+        flex: 1,
+        backgroundColor: colors.background,
+    },
+    content: {
         flex: 1,
         justifyContent: 'center',
         padding: 20,
-        backgroundColor: theme.background,
+    },
+    logo: {
+        width: 150,
+        height: 150,
+        alignSelf: 'center',
+        marginBottom: 24,
+        resizeMode: 'contain',
     },
     title: {
-        fontSize: 24,
+        fontSize: 28,
         fontWeight: 'bold',
         textAlign: 'center',
-        marginBottom: 20,
-        color: theme.text,
+        color: colors.text,
+    },
+    subtitle: {
+        fontSize: 16,
+        textAlign: 'center',
+        color: colors.textSecondary,
+        marginBottom: 24,
     },
     input: {
         height: 50,
-        borderColor: theme.border,
+        borderColor: colors.border,
         borderWidth: 1,
-        borderRadius: 5,
+        borderRadius: 8,
         marginBottom: 15,
-        paddingHorizontal: 10,
-        backgroundColor: theme.card,
-        color: theme.text,
+        paddingHorizontal: 15,
+        backgroundColor: colors.card,
+        color: colors.text,
+        fontSize: 16,
     },
     errorText: {
-        color: theme.danger,
+        color: colors.danger,
         textAlign: 'center',
         marginBottom: 10,
     },
     buttonContainer: {
         marginVertical: 10,
+        shadowColor: colors.primary,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+        elevation: 5,
     },
     cadastroLink: {
         marginTop: 20,
         alignItems: 'center',
     },
     cadastroText: {
-        color: theme.textSecondary,
+        color: colors.textSecondary,
         fontSize: 14,
     },
     cadastroTextBold: {
         fontWeight: 'bold',
-        color: theme.primary,
+        color: colors.primary,
     },
 });

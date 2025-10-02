@@ -1,25 +1,17 @@
-import React, { useState, useCallback } from 'react';
-import { 
-    View, 
-    Text, 
-    StyleSheet, 
-    FlatList, 
-    ActivityIndicator, 
-    TouchableOpacity, 
-    Alert,
-    SafeAreaView,
-    Platform
-} from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context"
+import { useState, useCallback } from 'react';
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity, Alert} from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import { useTheme } from '../theme';
+import { useTheme } from '../contexts/ThemeContext';
 import { apiJava } from '../services/api';
 
 const StatusBadge = ({ status }) => {
-    const theme = useTheme();
+    const { colors } = useTheme(); 
+    const styles = getStyles(colors); 
     const isAtiva = status === 'ATIVA';
-    const backgroundColor = isAtiva ? theme.primary : theme.grey;
-    const textColor = isAtiva ? theme.white : theme.black;
-    const styles = getStyles(theme);
+
+    const backgroundColor = isAtiva ? colors.primary : colors.textSecondary;
+    const textColor = isAtiva ? colors.white : colors.text;
 
     return (
         <View style={[styles.badge, { backgroundColor }]}>
@@ -28,9 +20,10 @@ const StatusBadge = ({ status }) => {
     );
 };
 
+// --- Componente MotoCard Atualizado ---
 const MotoCard = ({ item, onPress }) => {
-    const theme = useTheme();
-    const styles = getStyles(theme);
+    const { colors } = useTheme(); 
+    const styles = getStyles(colors); 
 
     return (
         <TouchableOpacity style={styles.card} onPress={onPress}>
@@ -43,11 +36,12 @@ const MotoCard = ({ item, onPress }) => {
     );
 };
 
+// --- Componente Principal Atualizado ---
 export default function MotosListScreen({ navigation }) {
     const [motos, setMotos] = useState([]);
     const [loading, setLoading] = useState(false);
-    const theme = useTheme();
-    const styles = getStyles(theme);
+    const { colors } = useTheme(); 
+    const styles = getStyles(colors); 
 
     const carregarMotos = async () => {
         setLoading(true);
@@ -71,7 +65,7 @@ export default function MotosListScreen({ navigation }) {
     return (
         <SafeAreaView style={styles.safeArea}>
             {loading && motos.length === 0 ? (
-                <ActivityIndicator size="large" color={theme.primary} style={{ flex: 1 }} />
+                <ActivityIndicator size="large" color={colors.primary} style={{ flex: 1 }} />
             ) : (
                 <FlatList
                     data={motos}
@@ -99,24 +93,27 @@ export default function MotosListScreen({ navigation }) {
     );
 }
 
-const getStyles = (theme) => StyleSheet.create({
-    safeArea: { flex: 1, backgroundColor: theme.background },
-    emptyListText: { textAlign: 'center', marginTop: 30, color: theme.textSecondary, fontSize: 16 },
+const getStyles = (colors) => StyleSheet.create({
+    safeArea: { 
+        flex: 1, 
+        backgroundColor: 
+        colors.background },
+    emptyListText: { 
+        textAlign: 'center', 
+        marginTop: 30, color: 
+        colors.textSecondary, 
+        fontSize: 16 },
     card: {
-        backgroundColor: theme.card,
+        backgroundColor: colors.card,
         padding: 16,
         marginVertical: 8,
         borderRadius: 12,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        ...Platform.select({
-            ios: { shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 2 },
-            android: { elevation: 3 },
-        }),
     },
-    cardTitle: { fontSize: 16, fontWeight: 'bold', color: theme.text },
-    cardSubtitle: { fontSize: 14, color: theme.textSecondary, marginTop: 4 },
+    cardTitle: { fontSize: 16, fontWeight: 'bold', color: colors.text },
+    cardSubtitle: { fontSize: 14, color: colors.textSecondary, marginTop: 4 },
     badge: { paddingVertical: 4, paddingHorizontal: 8, borderRadius: 12 },
     badgeText: { fontSize: 12, fontWeight: 'bold' },
     fab: {
@@ -126,10 +123,10 @@ const getStyles = (theme) => StyleSheet.create({
         width: 60,
         height: 60,
         borderRadius: 30,
-        backgroundColor: theme.primary,
+        backgroundColor: colors.primary,
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 8,
     },
-    fabText: { fontSize: 30, color: theme.white, lineHeight: 32 },
+    fabText: { fontSize: 30, color: colors.white, lineHeight: 32 },
 });

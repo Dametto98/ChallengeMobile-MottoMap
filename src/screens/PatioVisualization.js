@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { apiJava } from '../services/api';
-import { useTheme } from '../theme';
+import { useTheme } from '../contexts/ThemeContext';
 
 export default function PatioVisualizacaoScreen({ navigation }) {
     const [patioData, setPatioData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const theme = useTheme();
+    const { colors } = useTheme();
+    const styles = getStyles(colors);
 
     const carregarPatio = async () => {
         try {
@@ -28,10 +29,8 @@ export default function PatioVisualizacaoScreen({ navigation }) {
         carregarPatio();
     }, []);
 
-    const styles = getStyles(theme);
-
-    if (loading) {
-        return <View style={styles.centered}><ActivityIndicator size="large" color={theme.primary} /></View>;
+     if (loading) {
+        return <View style={styles.centered}><ActivityIndicator size="large" color={colors.primary} /></View>;
     }
     if (error) {
         return <View style={styles.centered}><Text style={styles.errorText}>{error}</Text></View>;
@@ -40,10 +39,10 @@ export default function PatioVisualizacaoScreen({ navigation }) {
     const renderVaga = ({ item }) => (
         <TouchableOpacity
             style={[styles.vaga, item.ocupado ? styles.vagaOcupada : styles.vagaLivre]}
-            onPress={() => item.ocupado && item.moto && navigation.navigate('DetalhesMoto', { moto: item.moto })}
+            onPress={() => item.ocupado && item.moto && navigation.navigate('DetalhesMoto', { motoId: item.moto.id })}
         >
             <Text style={styles.vagaText}>{item.identificacao}</Text>
-            {item.ocupado && item.moto && <Text style={styles.vagaMotoText}>Moto: {item.moto.placa}</Text>}
+            {item.ocupado && item.moto && <Text style={styles.vagaMotoText}>Placa: {item.moto.placa}</Text>}
         </TouchableOpacity>
     );
 
@@ -62,14 +61,19 @@ export default function PatioVisualizacaoScreen({ navigation }) {
     );
 }
 
-const getStyles = (theme) => StyleSheet.create({
-    container: { flex: 1, padding: 10, backgroundColor: theme.background, },
-    centered: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.background, },
-    errorText: { color: theme.danger, fontSize: 16, },
-    title: { fontSize: 20, fontWeight: 'bold', textAlign: 'center', marginBottom: 15, color: theme.text, },
-    vaga: { flex: 1, margin: 5, padding: 10, height: 80, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: theme.border, borderRadius: 5, },
-    vagaLivre: { backgroundColor: '#d4edda', },
-    vagaOcupada: { backgroundColor: '#f8d7da', },
-    vagaText: { fontSize: 16, fontWeight: 'bold', color: theme.text, },
-    vagaMotoText: { fontSize: 12, marginTop: 5, color: theme.textSecondary, },
+const getStyles = (colors) => StyleSheet.create({
+    container: { flex: 1, padding: 10, backgroundColor: colors.background },
+    centered: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background },
+    errorText: { color: colors.danger, fontSize: 16 },
+    title: { fontSize: 20, fontWeight: 'bold', textAlign: 'center', marginBottom: 15, color: colors.text },
+    vaga: { flex: 1, margin: 5, padding: 10, height: 80, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: colors.border, borderRadius: 8 },
+    // Usando as cores do tema para as vagas
+    vagaLivre: {
+        backgroundColor: colors.status_ok,
+    },
+    vagaOcupada: {
+        backgroundColor: colors.status_danger,
+    },
+    vagaText: { fontSize: 16, fontWeight: 'bold', color: colors.text },
+    vagaMotoText: { fontSize: 12, marginTop: 5, color: colors.textSecondary },
 });
