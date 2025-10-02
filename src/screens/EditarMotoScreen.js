@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Text, TextInput, Button, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import { ScrollView, View, Text, TextInput, Button, StyleSheet, ActivityIndicator, Alert, Switch } from 'react-native';
 import { useTheme } from '../contexts/ThemeContext';
 import { apiJava } from '../services/api';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -48,6 +48,7 @@ export default function EditarMotoScreen({ route, navigation }) {
             Alert.alert("Sucesso!", "Moto atualizada com sucesso.");
             navigation.goBack();
         } catch (error) {
+            console.error("Erro ao atualizar moto:", error.response?.data || error);
             Alert.alert("Erro", "Não foi possível atualizar a moto.");
         } finally {
             setLoading(false);
@@ -72,9 +73,7 @@ export default function EditarMotoScreen({ route, navigation }) {
                 setOpen={setOpen}
                 setValue={setModeloMoto}
                 setItems={setItems}
-
                 listMode="MODAL"
-
                 theme={theme.toUpperCase()}
                 style={styles.dropdown}
                 dropDownContainerStyle={{ backgroundColor: colors.card, borderColor: colors.border }}
@@ -86,8 +85,18 @@ export default function EditarMotoScreen({ route, navigation }) {
             <Text style={styles.label}>Ano</Text>
             <TextInput style={styles.input} value={ano} onChangeText={setAno} keyboardType="numeric" placeholderTextColor={colors.textSecondary} />
 
-            <Text style={styles.label}>Status</Text>
-            <TextInput style={styles.input} value={statusMoto} onChangeText={setStatusMoto} placeholderTextColor={colors.textSecondary} />
+            <View style={styles.switchContainer}>
+                <Text style={styles.label}>Status da Moto</Text>
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Switch
+                        trackColor={{ false: '#767577', true: colors.primary }}
+                        thumbColor={colors.white}
+                        onValueChange={(newValue) => setStatusMoto(newValue ? 'ATIVA' : 'INATIVA')}
+                        value={statusMoto === 'ATIVA'}
+                    />
+                    <Text style={styles.statusText}>{statusMoto}</Text>
+                </View>
+            </View>
             
             {loading ? (
                 <ActivityIndicator size="large" color={colors.primary} style={{ marginTop: 20 }} />
@@ -111,4 +120,17 @@ const getStyles = (colors) => StyleSheet.create({
         borderColor: colors.border,
         marginBottom: 15,
     },
+    switchContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: 15,
+        marginBottom: 10,
+    },
+    statusText: {
+        marginLeft: 10,
+        fontSize: 16,
+        color: colors.text,
+        fontWeight: 'bold',
+    }
 });
