@@ -25,13 +25,10 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await apiJava.post('/usuario/login', {
                 email: email,
-                senha: password, // O backend espera 'senha'
+                senha: password,
             });
 
             const { token } = response.data;
-
-            // Para obter os dados do usuário, precisaríamos de outro endpoint ou que o login retornasse mais dados
-            // Por simplicidade, vamos armazenar apenas o email por enquanto
             const userData = { email };
             setUser(userData);
 
@@ -39,8 +36,16 @@ export const AuthProvider = ({ children }) => {
             await AsyncStorage.setItem('@MottoMap:token', token);
 
         } catch (error) {
-            console.error("Erro no login:", error.response?.data || error.message);
-            throw new Error('Credenciais inválidas. Verifique seu e-mail e senha.');
+            let errorMessage = 'Ocorreu um erro inesperado ao tentar fazer o login.';
+
+            if (error.response && error.response.data && error.response.data.erro) {
+                errorMessage = error.response.data.erro;
+            } 
+            else if (error.request) {
+                errorMessage = 'Não foi possível conectar ao servidor. Verifique sua rede.';
+            }
+
+            throw new Error(errorMessage);
         }
     };
 

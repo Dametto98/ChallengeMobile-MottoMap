@@ -1,8 +1,7 @@
-import { SafeAreaView } from "react-native-safe-area-context"
-import { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator, TouchableOpacity, Image, SafeAreaView } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
-import { useTheme } from '../contexts/ThemeContext'; 
+import { useTheme } from '../contexts/ThemeContext';
 import { useTranslation } from 'react-i18next'; 
 
 export default function LoginScreen({ navigation }) {
@@ -12,13 +11,13 @@ export default function LoginScreen({ navigation }) {
     const [error, setError] = useState('');
     
     const { signIn } = useAuth();
-    const { colors } = useTheme(); 
+    const { colors } = useTheme();
     const { t } = useTranslation(); 
-    const styles = getStyles(colors); 
+    const styles = getStyles(colors);
 
     const handleLogin = async () => {
         if (!email || !password) {
-            setError(t('errorFillFields')); 
+            setError('Por favor, preencha todos os campos.');
             return;
         }
         setLoading(true);
@@ -26,7 +25,7 @@ export default function LoginScreen({ navigation }) {
         try {
             await signIn(email, password);
         } catch (err) {
-            setError(t('errorInvalidCredentials')); 
+            setError(err.message); 
             setLoading(false);
         }
     };
@@ -47,7 +46,7 @@ export default function LoginScreen({ navigation }) {
                 <TextInput
                     style={styles.input}
                     placeholder={t('email')}
-                    placeholderTextColor={colors.textSecondary} // 4. Usamos 'colors' aqui
+                    placeholderTextColor={colors.textSecondary}
                     value={email}
                     onChangeText={setEmail}
                     keyboardType="email-address"
@@ -56,7 +55,7 @@ export default function LoginScreen({ navigation }) {
                 <TextInput
                     style={styles.input}
                     placeholder={t('password')}
-                    placeholderTextColor={colors.textSecondary} // 4. Usamos 'colors' aqui
+                    placeholderTextColor={colors.textSecondary}
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry
@@ -83,7 +82,6 @@ export default function LoginScreen({ navigation }) {
     );
 }
 
-// 5. A função agora recebe 'colors' e usa suas propriedades
 const getStyles = (colors) => StyleSheet.create({
     container: {
         flex: 1,
