@@ -2,18 +2,30 @@ import React, { useState } from 'react';
 import { ScrollView, View, Text, TextInput, Button, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { useTheme } from '../contexts/ThemeContext';
 import { apiJava } from '../services/api';
+import DropDownPicker from 'react-native-dropdown-picker';
+
+const modelosMotoItems = [
+    { label: 'POP_110I', value: 'POP_110I' },
+    { label: 'MOTTU_E_MAX', value: 'MOTTU_E_MAX' },
+    { label: 'MOTTU_SPORT_ESD', value: 'MOTTU_SPORT_ESD' },
+    { label: 'MOTTU_SPORT', value: 'MOTTU_SPORT' }
+];
 
 export default function EditarMotoScreen({ route, navigation }) {
     const { moto } = route.params;
-    const { colors } = useTheme();
+    const { colors, theme } = useTheme();
     const styles = getStyles(colors);
 
     const [placa, setPlaca] = useState(moto.placa);
     const [chassi, setChassi] = useState(moto.chassi);
-    const [modeloMoto, setModeloMoto] = useState(moto.modeloMoto);
     const [ano, setAno] = useState(moto.ano.toString());
     const [statusMoto, setStatusMoto] = useState(moto.statusMoto);
     const [idFilial, setIdFilial] = useState(moto.filial.id.toString());
+    
+    const [open, setOpen] = useState(false);
+    const [modeloMoto, setModeloMoto] = useState(moto.modeloMoto);
+    const [items, setItems] = useState(modelosMotoItems);
+
     const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
 
@@ -43,7 +55,7 @@ export default function EditarMotoScreen({ route, navigation }) {
     };
     
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container} keyboardShouldPersistTaps="handled" nestedScrollEnabled={true}>
             <Text style={styles.label}>Placa</Text>
             <TextInput style={styles.input} value={placa} onChangeText={setPlaca} autoCapitalize="characters" placeholderTextColor={colors.textSecondary} />
             {errors.placa && <Text style={styles.errorText}>{errors.placa}</Text>}
@@ -53,7 +65,23 @@ export default function EditarMotoScreen({ route, navigation }) {
             {errors.chassi && <Text style={styles.errorText}>{errors.chassi}</Text>}
             
             <Text style={styles.label}>Modelo</Text>
-            <TextInput style={styles.input} value={modeloMoto} onChangeText={setModeloMoto} placeholderTextColor={colors.textSecondary} />
+            <DropDownPicker
+                open={open}
+                value={modeloMoto}
+                items={items}
+                setOpen={setOpen}
+                setValue={setModeloMoto}
+                setItems={setItems}
+
+                listMode="MODAL"
+
+                theme={theme.toUpperCase()}
+                style={styles.dropdown}
+                dropDownContainerStyle={{ backgroundColor: colors.card, borderColor: colors.border }}
+                listItemLabelStyle={{ color: colors.text }}
+                selectedItemLabelStyle={{ fontWeight: "bold" }}
+                zIndex={1000}
+            />
             
             <Text style={styles.label}>Ano</Text>
             <TextInput style={styles.input} value={ano} onChangeText={setAno} keyboardType="numeric" placeholderTextColor={colors.textSecondary} />
@@ -75,7 +103,12 @@ export default function EditarMotoScreen({ route, navigation }) {
 const getStyles = (colors) => StyleSheet.create({
     container: { flex: 1, padding: 20, backgroundColor: colors.background },
     label: { fontSize: 16, color: colors.text, marginBottom: 5, marginTop: 10 },
-    input: { backgroundColor: colors.card, color: colors.text, borderWidth: 1, borderColor: colors.border, borderRadius: 8, padding: 12, fontSize: 16 },
+    input: { backgroundColor: colors.card, color: colors.text, borderWidth: 1, borderColor: colors.border, borderRadius: 8, padding: 12, fontSize: 16, height: 50 },
     errorText: { color: colors.danger, fontSize: 12, marginTop: 5 },
-    buttonContainer: { marginTop: 30 }
+    buttonContainer: { marginTop: 30, marginBottom: 40 },
+    dropdown: {
+        backgroundColor: colors.card,
+        borderColor: colors.border,
+        marginBottom: 15,
+    },
 });

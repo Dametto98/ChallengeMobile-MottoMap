@@ -1,5 +1,2 @@
-Fazer dropdown de modelo: Mottu_Sport,Mottu_Sport_ESD, Mottu_e_Max e Pop_110i
 Status: booleano (Ativo/ Inativo) 
-Adicionar ano da moto como imput
-Filiais: DropDown 
-Add botão de troca de tema e troca de linguagem 
+Filiais: DropDown  
