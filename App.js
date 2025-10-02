@@ -1,7 +1,7 @@
-import './src/i18n';
+import "./src/i18n";
 import { AuthProvider } from "./src/contexts/AuthContext";
 import StackNavigator from "./src/routes/stack.routes";
-import ThemeProvider from './src/contexts/ThemeContext';
+import ThemeProvider from "./src/contexts/ThemeContext";
 
 export default function App() {
   return (
@@ -9,6 +9,6 @@ export default function App() {
       <AuthProvider>
         <StackNavigator />
       </AuthProvider>
-    </ThemeProvider> 
+    </ThemeProvider>
   );
 }

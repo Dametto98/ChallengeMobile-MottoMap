@@ -1,150 +1,170 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator, TouchableOpacity, Image, SafeAreaView } from 'react-native';
-import { useAuth } from '../contexts/AuthContext';
-import { useTheme } from '../contexts/ThemeContext';
-import { useTranslation } from 'react-i18next'; 
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+  Image,
+  SafeAreaView,
+} from "react-native";
+import { useAuth } from "../contexts/AuthContext";
+import { useTheme } from "../contexts/ThemeContext";
+import { useTranslation } from "react-i18next";
 
 export default function LoginScreen({ navigation }) {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    
-    const { signIn } = useAuth();
-    const { colors } = useTheme();
-    const { t } = useTranslation(); 
-    const styles = getStyles(colors);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-    const handleLogin = async () => {
-        if (!email || !password) {
-            setError('Por favor, preencha todos os campos.');
-            return;
-        }
-        setLoading(true);
-        setError('');
-        try {
-            await signIn(email, password);
-        } catch (err) {
-            setError(err.message); 
-            setLoading(false);
-        }
-    };
+  const { signIn } = useAuth();
+  const { colors } = useTheme();
+  const { t } = useTranslation();
+  const styles = getStyles(colors);
 
-    return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.content}>
-                <Image 
-                    source={require('../../assets/images/mottomap-logo.png')} 
-                    style={styles.logo}
-                />
-                
-                <Text style={styles.title}>{t('welcome')}</Text>
-                <Text style={styles.subtitle}>Faça login para continuar</Text>
-                
-                {error && <Text style={styles.errorText}>{error}</Text>}
-                
-                <TextInput
-                    style={styles.input}
-                    placeholder={t('email')}
-                    placeholderTextColor={colors.textSecondary}
-                    value={email}
-                    onChangeText={setEmail}
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder={t('password')}
-                    placeholderTextColor={colors.textSecondary}
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry
-                />
-                
-                {loading ? (
-                    <ActivityIndicator size="large" color={colors.primary} style={{marginVertical: 10}} />
-                ) : (
-                    <View style={styles.buttonContainer}>
-                        <Button title={t('loginButton')} onPress={handleLogin} color={colors.primary} />
-                    </View>
-                )}
-                
-                <TouchableOpacity 
-                    style={styles.cadastroLink}
-                    onPress={() => navigation.navigate('Cadastro')}
-                >
-                    <Text style={styles.cadastroText}>
-                        {t('registerPrompt')} <Text style={styles.cadastroTextBold}>{t('registerLink')}</Text>
-                    </Text>
-                </TouchableOpacity>
-            </View>
-        </SafeAreaView>
-    );
+  const handleLogin = async () => {
+    if (!email || !password) {
+      setError("Por favor, preencha todos os campos.");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    try {
+      await signIn(email, password);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
+        <Image
+          source={require("../../assets/images/mottomap-logo.png")}
+          style={styles.logo}
+        />
+
+        <Text style={styles.title}>{t("welcome")}</Text>
+        <Text style={styles.subtitle}>Faça login para continuar</Text>
+
+        {error && <Text style={styles.errorText}>{error}</Text>}
+
+        <TextInput
+          style={styles.input}
+          placeholder={t("email")}
+          placeholderTextColor={colors.textSecondary}
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder={t("password")}
+          placeholderTextColor={colors.textSecondary}
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+
+        {loading ? (
+          <ActivityIndicator
+            size="large"
+            color={colors.primary}
+            style={{ marginVertical: 10 }}
+          />
+        ) : (
+          <View style={styles.buttonContainer}>
+            <Button
+              title={t("loginButton")}
+              onPress={handleLogin}
+              color={colors.primary}
+            />
+          </View>
+        )}
+
+        <TouchableOpacity
+          style={styles.cadastroLink}
+          onPress={() => navigation.navigate("Cadastro")}
+        >
+          <Text style={styles.cadastroText}>
+            {t("registerPrompt")}{" "}
+            <Text style={styles.cadastroTextBold}>{t("registerLink")}</Text>
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
 }
 
-const getStyles = (colors) => StyleSheet.create({
+const getStyles = (colors) =>
+  StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: colors.background,
+      flex: 1,
+      backgroundColor: colors.background,
     },
     content: {
-        flex: 1,
-        justifyContent: 'center',
-        padding: 20,
+      flex: 1,
+      justifyContent: "center",
+      padding: 20,
     },
     logo: {
-        width: 150,
-        height: 150,
-        alignSelf: 'center',
-        marginBottom: 24,
-        resizeMode: 'contain',
+      width: 150,
+      height: 150,
+      alignSelf: "center",
+      marginBottom: 24,
+      resizeMode: "contain",
     },
     title: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        color: colors.text,
+      fontSize: 28,
+      fontWeight: "bold",
+      textAlign: "center",
+      color: colors.text,
     },
     subtitle: {
-        fontSize: 16,
-        textAlign: 'center',
-        color: colors.textSecondary,
-        marginBottom: 24,
+      fontSize: 16,
+      textAlign: "center",
+      color: colors.textSecondary,
+      marginBottom: 24,
     },
     input: {
-        height: 50,
-        borderColor: colors.border,
-        borderWidth: 1,
-        borderRadius: 8,
-        marginBottom: 15,
-        paddingHorizontal: 15,
-        backgroundColor: colors.card,
-        color: colors.text,
-        fontSize: 16,
+      height: 50,
+      borderColor: colors.border,
+      borderWidth: 1,
+      borderRadius: 8,
+      marginBottom: 15,
+      paddingHorizontal: 15,
+      backgroundColor: colors.card,
+      color: colors.text,
+      fontSize: 16,
     },
     errorText: {
-        color: colors.danger,
-        textAlign: 'center',
-        marginBottom: 10,
+      color: colors.danger,
+      textAlign: "center",
+      marginBottom: 10,
     },
     buttonContainer: {
-        marginVertical: 10,
-        shadowColor: colors.primary,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
-        elevation: 5,
+      marginVertical: 10,
+      shadowColor: colors.primary,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 4,
+      elevation: 5,
     },
     cadastroLink: {
-        marginTop: 20,
-        alignItems: 'center',
+      marginTop: 20,
+      alignItems: "center",
     },
     cadastroText: {
-        color: colors.textSecondary,
-        fontSize: 14,
+      color: colors.textSecondary,
+      fontSize: 14,
     },
     cadastroTextBold: {
-        fontWeight: 'bold',
-        color: colors.primary,
+      fontWeight: "bold",
+      color: colors.primary,
     },
-});
+  });

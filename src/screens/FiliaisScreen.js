@@ -25,7 +25,6 @@ export default function FiliaisScreen({ navigation }) {
 
     useFocusEffect(useCallback(() => { carregarFiliais(); }, []));
 
-    // 1. CRIAMOS A FUNÇÃO PARA DELETAR UMA FILIAL
     const handleDelete = (filialId, filialNome) => {
         Alert.alert(
             "Confirmar Exclusão",
@@ -39,7 +38,6 @@ export default function FiliaisScreen({ navigation }) {
                         try {
                             await apiJava.delete(`/filial/${filialId}`);
                             Alert.alert("Sucesso", "Filial apagada.");
-                            // Recarrega a lista para remover o item deletado
                             carregarFiliais();
                         } catch (error) {
                             Alert.alert("Erro", "Não foi possível apagar a filial.");
@@ -50,7 +48,6 @@ export default function FiliaisScreen({ navigation }) {
         );
     };
 
-    // 2. MODIFICAMOS O ITEM DA LISTA PARA INCLUIR OS BOTÕES
     const renderFilialItem = ({ item }) => (
         <View style={styles.filialItem}>
             {/* Área clicável para ver o pátio */}
@@ -122,7 +119,6 @@ const getStyles = (colors) => StyleSheet.create({
     filialEndereco: { fontSize: 14, color: colors.textSecondary, marginTop: 5, marginBottom: 16 }, // Adicionado margem inferior
     emptyListText: { textAlign: 'center', marginTop: 50, color: colors.textSecondary },
 
-    // 3. ADICIONAMOS OS NOVOS ESTILOS PARA OS BOTÕES
     actionsContainer: {
         flexDirection: 'row',
         justifyContent: 'flex-end',
