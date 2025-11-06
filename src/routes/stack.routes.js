@@ -16,11 +16,13 @@ import DetalhesFilialScreen from "../screens/DetalhesFilialScreen";
 import RegistrarFilialScreen from "../screens/RegistrarFilialScreen";
 import EditarFilialScreen from "../screens/EditarFilialScreen";
 import PatioVisualizacaoScreen from "../screens/PatioVisualization";
+import { useTranslation } from 'react-i18next';
 
 const Stack = createNativeStackNavigator();
 
 function AuthRoutes() {
   const { colors } = useTheme();
+  const { t } = useTranslation();
 
   return (
     <Stack.Navigator
@@ -42,7 +44,7 @@ function AuthRoutes() {
       <Stack.Screen
         name="Cadastro"
         component={CadastroScreen}
-        options={{ title: "Crie sua Conta" }}
+        options={{ title: t('titleCreateAccount') }}
       />
     </Stack.Navigator>
   );
@@ -50,6 +52,7 @@ function AuthRoutes() {
 
 function AppRoutes() {
   const { colors } = useTheme();
+  const { t } = useTranslation();
 
   return (
     <Stack.Navigator
@@ -70,52 +73,52 @@ function AppRoutes() {
       <Stack.Screen
         name="Home"
         component={HomeScreen}
-        options={{ title: "Painel de Controle" }}
+        options={{ title: t('titleDashboard') }}
       />
       <Stack.Screen
         name="MotosList"
         component={MotosListScreen}
-        options={{ title: "Motos da Frota" }}
+        options={{ title: t('titleMotosList') }}
       />
       <Stack.Screen
         name="RegistrarMoto"
         component={RegistrarMotoScreen}
-        options={{ title: "Registrar Nova Moto" }}
+        options={{ title: t('titleRegisterMoto') }}
       />
       <Stack.Screen
         name="DetalhesMoto"
         component={DetalhesMotoScreen}
-        options={{ title: "Detalhes da Moto" }}
+        options={{ title: t('titleDetalhesMoto') }}
       />
       <Stack.Screen
         name="EditarMoto"
         component={EditarMotoScreen}
-        options={{ title: "Editar Moto" }}
+        options={{ title: t('titleEditarMoto') }}
       />
       <Stack.Screen
         name="Filiais"
         component={FiliaisScreen}
-        options={{ title: "Nossas Filiais" }}
+        options={{ title: t('titleFiliais') }}
       />
       <Stack.Screen
         name="DetalhesFilial"
         component={DetalhesFilialScreen}
-        options={{ title: "Detalhes da Filial" }}
+        options={{ title: t('titleDetalhesFilial') }}
       />
       <Stack.Screen
         name="RegistrarFilial"
         component={RegistrarFilialScreen}
-        options={{ title: "Nova Filial" }}
+        options={{ title: t('titleRegisterFilial') }}
       />
       <Stack.Screen
         name="EditarFilial"
         component={EditarFilialScreen}
-        options={{ title: "Editar Filial" }}
+        options={{ title: t('titleEditarFilial') }}
       />
       <Stack.Screen
         name="PatioVisualizacao"
         component={PatioVisualizacaoScreen}
-        options={{ title: "Visualização do Pátio" }}
+        options={{ title: t('titlePatio') }}
       />
     </Stack.Navigator>
   );

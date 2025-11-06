@@ -11,10 +11,12 @@ import {
 } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
 import { apiJava } from "../services/api";
+import { useTranslation } from 'react-i18next';
 
 export default function RegistrarFilialScreen({ navigation }) {
   const { colors } = useTheme();
   const styles = getStyles(colors);
+  const { t } = useTranslation();
 
   const [nome, setNome] = useState("");
   const [endereco, setEndereco] = useState("");
@@ -29,19 +31,19 @@ export default function RegistrarFilialScreen({ navigation }) {
 
   const validate = () => {
     const newErrors = {};
-    if (!nome) newErrors.nome = "O nome é obrigatório.";
-    if (!endereco) newErrors.endereco = "O endereço é obrigatório.";
-    if (!cidade) newErrors.cidade = "A cidade é obrigatória.";
+    if (!nome) newErrors.nome = t('errorRequired');
+    if (!endereco) newErrors.endereco = t('errorRequired');
+    if (!cidade) newErrors.cidade = t('errorRequired');
     if (!siglaEstado)
-      newErrors.siglaEstado = "A sigla do estado é obrigatória.";
+      newErrors.siglaEstado = t('errorRequired');
     else if (siglaEstado.length !== 2)
-      newErrors.siglaEstado = "A sigla deve ter 2 caracteres.";
+      newErrors.siglaEstado = t('errorUFLength');
     if (!numeroLinha || isNaN(numeroLinha))
-      newErrors.numeroLinha = "Informe um número válido de linhas.";
+      newErrors.numeroLinha = t('errorLinesInvalid');
     if (!numeroColuna || isNaN(numeroColuna))
-      newErrors.numeroColuna = "Informe um número válido de colunas.";
+      newErrors.numeroColuna = t('errorColsInvalid');
     if (!capacidadeMaxima || isNaN(capacidadeMaxima))
-      newErrors.capacidadeMaxima = "Informe uma capacidade válida.";
+      newErrors.capacidadeMaxima = t('errorCapInvalid');
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -63,11 +65,11 @@ export default function RegistrarFilialScreen({ navigation }) {
 
     try {
       await apiJava.post("/filial", filialData);
-      Alert.alert("Sucesso!", "Nova filial registrada.");
+      Alert.alert(t('alertSuccess'), t('alertSuccessFilialRegistered'));
       navigation.goBack();
     } catch (error) {
       console.error("Erro ao salvar filial:", error.response?.data || error);
-      Alert.alert("Erro", "Não foi possível registrar a nova filial.");
+      Alert.alert(t('alertError'), t('alertErrorFilialRegistered'));
     } finally {
       setLoading(false);
     }
@@ -75,7 +77,7 @@ export default function RegistrarFilialScreen({ navigation }) {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.label}>Nome da Filial</Text>
+      <Text style={styles.label}>{t('labelNomeFilial')}</Text>
       <TextInput
         style={styles.input}
         value={nome}
@@ -84,7 +86,7 @@ export default function RegistrarFilialScreen({ navigation }) {
       />
       {errors.nome && <Text style={styles.errorText}>{errors.nome}</Text>}
 
-      <Text style={styles.label}>Endereço</Text>
+      <Text style={styles.label}>{t('labelEndereco')}</Text>
       <TextInput
         style={styles.input}
         value={endereco}
@@ -95,7 +97,7 @@ export default function RegistrarFilialScreen({ navigation }) {
         <Text style={styles.errorText}>{errors.endereco}</Text>
       )}
 
-      <Text style={styles.label}>Cidade</Text>
+      <Text style={styles.label}>{t('labelCidade')}</Text>
       <TextInput
         style={styles.input}
         value={cidade}
@@ -104,7 +106,7 @@ export default function RegistrarFilialScreen({ navigation }) {
       />
       {errors.cidade && <Text style={styles.errorText}>{errors.cidade}</Text>}
 
-      <Text style={styles.label}>Sigla do Estado (UF)</Text>
+      <Text style={styles.label}>{t('labelUF')}</Text>
       <TextInput
         style={styles.input}
         value={siglaEstado}
@@ -117,7 +119,7 @@ export default function RegistrarFilialScreen({ navigation }) {
         <Text style={styles.errorText}>{errors.siglaEstado}</Text>
       )}
 
-      <Text style={styles.label}>Nº de Linhas do Pátio</Text>
+      <Text style={styles.label}>{t('labelLinhas')}</Text>
       <TextInput
         style={styles.input}
         value={numeroLinha}
@@ -129,7 +131,7 @@ export default function RegistrarFilialScreen({ navigation }) {
         <Text style={styles.errorText}>{errors.numeroLinha}</Text>
       )}
 
-      <Text style={styles.label}>Nº de Colunas do Pátio</Text>
+      <Text style={styles.label}>{t('labelColunas')}</Text>
       <TextInput
         style={styles.input}
         value={numeroColuna}
@@ -141,7 +143,7 @@ export default function RegistrarFilialScreen({ navigation }) {
         <Text style={styles.errorText}>{errors.numeroColuna}</Text>
       )}
 
-      <Text style={styles.label}>Capacidade Máxima</Text>
+      <Text style={styles.label}>{t('labelCapacidade')}</Text>
       <TextInput
         style={styles.input}
         value={capacidadeMaxima}
@@ -162,7 +164,7 @@ export default function RegistrarFilialScreen({ navigation }) {
       ) : (
         <View style={styles.buttonContainer}>
           <Button
-            title="Salvar Nova Filial"
+            title={t('saveButton')}
             onPress={handleSave}
             color={colors.primary}
           />

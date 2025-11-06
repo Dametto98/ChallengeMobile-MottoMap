@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import { apiJava } from "../services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import i18n from '../i18n';
 
 const AuthContext = createContext({});
 
@@ -35,13 +36,13 @@ export const AuthProvider = ({ children }) => {
       await AsyncStorage.setItem("@MottoMap:user", JSON.stringify(userData));
       await AsyncStorage.setItem("@MottoMap:token", token);
     } catch (error) {
-      let errorMessage = "Ocorreu um erro inesperado ao tentar fazer o login.";
+      let errorMessage = i18n.t('errorLoginGeneric');
 
       if (error.response && error.response.data && error.response.data.erro) {
         errorMessage = error.response.data.erro;
       } else if (error.request) {
         errorMessage =
-          "Não foi possível conectar ao servidor. Verifique sua rede.";
+          i18n.t('errorNetwork');
       }
 
       throw new Error(errorMessage);

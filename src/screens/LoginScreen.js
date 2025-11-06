@@ -27,7 +27,7 @@ export default function LoginScreen({ navigation }) {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      setError("Por favor, preencha todos os campos.");
+      setError(t("errorFillFields"));
       return;
     }
     setLoading(true);
@@ -49,7 +49,7 @@ export default function LoginScreen({ navigation }) {
         />
 
         <Text style={styles.title}>{t("welcome")}</Text>
-        <Text style={styles.subtitle}>Faça login para continuar</Text>
+        <Text style={styles.subtitle}>{t("loginPrompt")}</Text>
 
         {error && <Text style={styles.errorText}>{error}</Text>}
 

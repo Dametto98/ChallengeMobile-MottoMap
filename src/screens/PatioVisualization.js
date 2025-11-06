@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { apiJava } from "../services/api";
 import { useTheme } from "../contexts/ThemeContext";
+import { useTranslation } from 'react-i18next';
 
 export default function PatioVisualizacaoScreen({ route, navigation }) {
   const { filialId, filialNome } = route.params;
@@ -19,6 +20,7 @@ export default function PatioVisualizacaoScreen({ route, navigation }) {
   const [error, setError] = useState(null);
   const { colors } = useTheme();
   const styles = getStyles(colors);
+  const { t } = useTranslation();
 
   useLayoutEffect(() => {
     navigation.setOptions({ title: filialNome || "Layout do Pátio" });
@@ -33,7 +35,7 @@ export default function PatioVisualizacaoScreen({ route, navigation }) {
       setPatioData(response.data);
     } catch (err) {
       console.error("Erro ao buscar dados do pátio:", err);
-      setError("Não foi possível carregar os dados do pátio.");
+      setError(t('errorLoadingPatio'));
     } finally {
       setLoading(false);
     }
@@ -86,33 +88,21 @@ export default function PatioVisualizacaoScreen({ route, navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <View style={styles.statsContainer}>
-          <Text style={styles.statsText}>Ocupação: </Text>
-          <Text style={styles.statsValue}>
-            {vagasOcupadas} / {totalVagas}
-          </Text>
-        </View>
-        <View style={styles.legendContainer}>
-          <View style={styles.legendItem}>
-            <View
-              style={[
-                styles.legendColorBox,
-                { backgroundColor: colors.status_ok },
-              ]}
-            />
-            <Text style={styles.legendText}>Livre</Text>
-          </View>
-          <View style={styles.legendItem}>
-            <View
-              style={[
-                styles.legendColorBox,
-                { backgroundColor: colors.status_danger },
-              ]}
-            />
-            <Text style={styles.legendText}>Ocupada</Text>
-          </View>
-        </View>
-      </View>
+                <View style={styles.statsContainer}>
+                    <Text style={styles.statsText}>{t('patioOccupancy')}: </Text>
+                    <Text style={styles.statsValue}>{vagasOcupadas} / {totalVagas}</Text>
+                </View>
+                <View style={styles.legendContainer}>
+                    <View style={styles.legendItem}>
+                        <View style={[styles.legendColorBox, {backgroundColor: colors.status_ok}]} />
+                        <Text style={styles.legendText}>{t('legendFree')}</Text>
+                    </View>
+                    <View style={styles.legendItem}>
+                        <View style={[styles.legendColorBox, {backgroundColor: colors.status_danger}]} />
+                        <Text style={styles.legendText}>{t('legendOccupied')}</Text>
+                    </View>
+                </View>
+            </View>
 
       <FlatList
         data={patioData}
@@ -122,7 +112,7 @@ export default function PatioVisualizacaoScreen({ route, navigation }) {
         contentContainerStyle={{ padding: 8 }}
         ListEmptyComponent={
           <Text style={styles.emptyText}>
-            Nenhuma vaga cadastrada para esta filial.
+            {t('emptyVagas')}
           </Text>
         }
         refreshing={loading}

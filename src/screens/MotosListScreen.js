@@ -31,13 +31,14 @@ const StatusBadge = ({ status }) => {
 const MotoCard = ({ item, onPress }) => {
   const { colors } = useTheme();
   const styles = getStyles(colors);
+  const { t } = useTranslation();
 
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <View style={{ flex: 1 }}>
-        <Text style={styles.cardTitle}>Placa: {item.placa}</Text>
+        <Text style={styles.cardTitle}>{t('motoPlaca')}: {item.placa}</Text>
         <Text style={styles.cardSubtitle}>
-          {item.modeloMoto} - Ano: {item.ano}
+          {t('motoModelo')}: {item.modeloMoto} - {t('motoAno')}: {item.ano}
         </Text>
       </View>
       <StatusBadge status={item.statusMoto} />
@@ -50,6 +51,7 @@ export default function MotosListScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
   const { colors } = useTheme();
   const styles = getStyles(colors);
+  const { t } = useTranslation();
 
   const carregarMotos = async () => {
     setLoading(true);
@@ -58,7 +60,7 @@ export default function MotosListScreen({ navigation }) {
       setMotos(response.data.content || []);
     } catch (error) {
       console.error("Erro ao carregar motos:", error);
-      Alert.alert("Erro", "Não foi possível carregar a lista de motos.");
+      Alert.alert(t('alertError'), t('errorLoadingMotos'));
     } finally {
       setLoading(false);
     }
@@ -92,7 +94,7 @@ export default function MotosListScreen({ navigation }) {
           )}
           ListEmptyComponent={
             <Text style={styles.emptyListText}>
-              Nenhuma moto registrada ainda.
+              {t('emptyMotos')}
             </Text>
           }
           contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 16 }}

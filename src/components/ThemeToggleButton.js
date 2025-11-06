@@ -1,9 +1,11 @@
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
-import { useTheme } from "../contexts/ThemeContext"; // Importe do novo contexto
+import { useTheme } from "../contexts/ThemeContext"; 
+import { useTranslation } from 'react-i18next';
 
 export default function ThemeToggleButton() {
   const { toggleTheme, colors, theme } = useTheme();
+  const { t } = useTranslation();
 
   return (
     <TouchableOpacity
@@ -14,7 +16,7 @@ export default function ThemeToggleButton() {
       onPress={toggleTheme}
     >
       <Text style={[styles.text, { color: colors.primary }]}>
-        {theme === "light" ? "🌙 Ativar Modo Escuro" : "☀️ Ativar Modo Claro"}
+        {theme === "light" ? t('themeToggleDark') : t('themeToggleLight')}
       </Text>
     </TouchableOpacity>
   );

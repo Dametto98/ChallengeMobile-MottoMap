@@ -13,6 +13,7 @@ import {
 import { useTheme } from "../contexts/ThemeContext";
 import { apiJava } from "../services/api";
 import DropDownPicker from "react-native-dropdown-picker";
+import { useTranslation } from 'react-i18next'; // 1. IMPORTE O HOOK
 
 const modelosMotoItems = [
   { label: "POP_110I", value: "POP_110I" },
@@ -24,6 +25,7 @@ const modelosMotoItems = [
 export default function EditarMotoScreen({ route, navigation }) {
   const { moto } = route.params;
   const { colors, theme } = useTheme();
+  const { t } = useTranslation(); // 2. INICIE O HOOK DE TRADUÇÃO
   const styles = getStyles(colors);
 
   const [placa, setPlaca] = useState(moto.placa);
@@ -41,9 +43,10 @@ export default function EditarMotoScreen({ route, navigation }) {
 
   const validate = () => {
     const newErrors = {};
-    if (!placa) newErrors.placa = "A placa é obrigatória.";
+    // 3. TRADUZA AS MENSAGENS DE ERRO
+    if (!placa) newErrors.placa = t('errorRequired');
     if (!chassi || chassi.length !== 17)
-      newErrors.chassi = "O chassi deve ter 17 caracteres.";
+      newErrors.chassi = t('errorChassiLength');
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -63,11 +66,12 @@ export default function EditarMotoScreen({ route, navigation }) {
 
     try {
       await apiJava.put(`/moto/${moto.id}`, motoData);
-      Alert.alert("Sucesso!", "Moto atualizada com sucesso.");
+      // 3. TRADUZA OS ALERTAS
+      Alert.alert(t('alertSuccess'), t('alertSuccessMotoUpdated'));
       navigation.goBack();
     } catch (error) {
       console.error("Erro ao atualizar moto:", error.response?.data || error);
-      Alert.alert("Erro", "Não foi possível atualizar a moto.");
+      Alert.alert(t('alertError'), t('alertErrorMotoUpdated'));
     } finally {
       setLoading(false);
     }
@@ -79,7 +83,8 @@ export default function EditarMotoScreen({ route, navigation }) {
       keyboardShouldPersistTaps="handled"
       nestedScrollEnabled={true}
     >
-      <Text style={styles.label}>Placa</Text>
+      {/* 3. TRADUZA OS LABELS E PLACEHOLDERS */}
+      <Text style={styles.label}>{t('labelPlaca')}</Text>
       <TextInput
         style={styles.input}
         value={placa}
@@ -89,7 +94,7 @@ export default function EditarMotoScreen({ route, navigation }) {
       />
       {errors.placa && <Text style={styles.errorText}>{errors.placa}</Text>}
 
-      <Text style={styles.label}>Chassi</Text>
+      <Text style={styles.label}>{t('labelChassi')}</Text>
       <TextInput
         style={styles.input}
         value={chassi}
@@ -99,7 +104,7 @@ export default function EditarMotoScreen({ route, navigation }) {
       />
       {errors.chassi && <Text style={styles.errorText}>{errors.chassi}</Text>}
 
-      <Text style={styles.label}>Modelo</Text>
+      <Text style={styles.label}>{t('labelModelo')}</Text>
       <DropDownPicker
         open={open}
         value={modeloMoto}
@@ -109,6 +114,8 @@ export default function EditarMotoScreen({ route, navigation }) {
         setItems={setItems}
         listMode="MODAL"
         theme={theme.toUpperCase()}
+        placeholder={t('placeholderSelectModel')}
+        placeholderStyle={{ color: colors.textSecondary }}
         style={styles.dropdown}
         dropDownContainerStyle={{
           backgroundColor: colors.card,
@@ -119,7 +126,7 @@ export default function EditarMotoScreen({ route, navigation }) {
         zIndex={1000}
       />
 
-      <Text style={styles.label}>Ano</Text>
+      <Text style={styles.label}>{t('labelAno')}</Text>
       <TextInput
         style={styles.input}
         value={ano}
@@ -129,7 +136,7 @@ export default function EditarMotoScreen({ route, navigation }) {
       />
 
       <View style={styles.switchContainer}>
-        <Text style={styles.label}>Status da Moto</Text>
+        <Text style={styles.label}>{t('labelStatus')}</Text>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Switch
             trackColor={{ false: "#767577", true: colors.primary }}
@@ -152,7 +159,7 @@ export default function EditarMotoScreen({ route, navigation }) {
       ) : (
         <View style={styles.buttonContainer}>
           <Button
-            title="Salvar Alterações"
+            title={t('updateButton')}
             onPress={handleUpdate}
             color={colors.primary}
           />
@@ -162,6 +169,7 @@ export default function EditarMotoScreen({ route, navigation }) {
   );
 }
 
+// A função de estilos não muda
 const getStyles = (colors) =>
   StyleSheet.create({
     container: { flex: 1, padding: 20, backgroundColor: colors.background },

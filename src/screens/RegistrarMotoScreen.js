@@ -12,6 +12,7 @@ import {
 import { useTheme } from "../contexts/ThemeContext";
 import { apiJava } from "../services/api";
 import DropDownPicker from "react-native-dropdown-picker";
+import { useTranslation } from 'react-i18next';
 
 const modelosMotoItems = [
   { label: "POP_110I", value: "POP_110I" },
@@ -23,6 +24,7 @@ const modelosMotoItems = [
 export default function RegistrarMotoScreen({ navigation }) {
   const { colors, theme } = useTheme();
   const styles = getStyles(colors);
+  const { t } = useTranslation();
 
   const [placa, setPlaca] = useState("");
   const [chassi, setChassi] = useState("");
@@ -39,11 +41,10 @@ export default function RegistrarMotoScreen({ navigation }) {
 
   const validate = () => {
     const newErrors = {};
-    if (!placa) newErrors.placa = "A placa é obrigatória.";
-    if (!chassi || chassi.length !== 17)
-      newErrors.chassi = "O chassi deve ter 17 caracteres.";
-    if (!modeloMoto) newErrors.modeloMoto = "O modelo é obrigatório.";
-    if (!ano || isNaN(ano)) newErrors.ano = "O ano deve ser um número válido.";
+    if (!placa) newErrors.placa = t('errorRequired');
+    if (!chassi || chassi.length !== 17) newErrors.chassi = t('errorChassiLength');
+    if (!modeloMoto) newErrors.modeloMoto = t('errorRequired');
+    if (!ano || isNaN(ano)) newErrors.ano = t('errorYearInvalid');
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -63,10 +64,10 @@ export default function RegistrarMotoScreen({ navigation }) {
 
     try {
       await apiJava.post("/moto", motoData);
-      Alert.alert("Sucesso!", "Nova moto registrada.");
+      Alert.alert(t('alertSuccess'), t('alertSuccessMotoRegistered'));
       navigation.goBack();
     } catch (error) {
-      Alert.alert("Erro", "Não foi possível registrar a nova moto.");
+      Alert.alert(t('alertError'), t('alertErrorMotoRegistered'));
     } finally {
       setLoading(false);
     }
@@ -78,29 +79,29 @@ export default function RegistrarMotoScreen({ navigation }) {
       keyboardShouldPersistTaps="handled"
       nestedScrollEnabled={true}
     >
-      <Text style={styles.label}>Placa</Text>
+      <Text style={styles.label}>{t('labelPlaca')}</Text>
       <TextInput
         style={styles.input}
         value={placa}
         onChangeText={setPlaca}
-        placeholder="Ex: BRA2E19"
+        placeholder={t('placeholderPlaca')}
         autoCapitalize="characters"
         placeholderTextColor={colors.textSecondary}
       />
       {errors.placa && <Text style={styles.errorText}>{errors.placa}</Text>}
 
-      <Text style={styles.label}>Chassi</Text>
+      <Text style={styles.label}>{t('labelChassi')}</Text>
       <TextInput
         style={styles.input}
         value={chassi}
         onChangeText={setChassi}
-        placeholder="17 caracteres"
+        placeholder={t('placeholderChassi')}
         maxLength={17}
         placeholderTextColor={colors.textSecondary}
       />
       {errors.chassi && <Text style={styles.errorText}>{errors.chassi}</Text>}
 
-      <Text style={styles.label}>Modelo</Text>
+      <Text style={styles.label}>{t('labelModelo')}</Text>
       <DropDownPicker
         open={open}
         value={modeloMoto}
@@ -111,7 +112,7 @@ export default function RegistrarMotoScreen({ navigation }) {
         listMode="MODAL"
         theme={theme.toUpperCase()}
         style={styles.dropdown}
-        placeholder="Selecione um modelo..."
+        placeholder={t('placeholderSelectModel')}
         placeholderStyle={{ color: colors.textSecondary }}
         dropDownContainerStyle={{
           backgroundColor: colors.card,
@@ -125,12 +126,12 @@ export default function RegistrarMotoScreen({ navigation }) {
         <Text style={styles.errorText}>{errors.modeloMoto}</Text>
       )}
 
-      <Text style={styles.label}>Ano</Text>
+      <Text style={styles.label}><Text style={styles.label}>{t('labelAno')}</Text></Text>
       <TextInput
         style={styles.input}
         value={ano}
         onChangeText={setAno}
-        placeholder="Ex: 2024"
+        placeholder={t('placeholderAno')}
         keyboardType="numeric"
         placeholderTextColor={colors.textSecondary}
       />
@@ -145,7 +146,7 @@ export default function RegistrarMotoScreen({ navigation }) {
       ) : (
         <View style={styles.buttonContainer}>
           <Button
-            title="Salvar Nova Moto"
+            title={t('saveButton')}
             onPress={handleSave}
             color={colors.primary}
           />

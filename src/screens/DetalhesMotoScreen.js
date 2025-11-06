@@ -11,6 +11,7 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 import { useTheme } from "../contexts/ThemeContext";
 import { apiJava } from "../services/api";
+import { useTranslation } from "react-i18next";
 
 export default function DetalhesMotoScreen({ route, navigation }) {
   const { motoId } = route.params;
@@ -18,6 +19,7 @@ export default function DetalhesMotoScreen({ route, navigation }) {
   const [loading, setLoading] = useState(true);
   const { colors } = useTheme();
   const styles = getStyles(colors);
+  const { t } = useTranslation();
 
   const carregarDetalhes = async () => {
     setLoading(true);
@@ -26,7 +28,7 @@ export default function DetalhesMotoScreen({ route, navigation }) {
       setMoto(response.data);
     } catch (error) {
       console.error("Erro ao buscar detalhes da moto:", error);
-      Alert.alert("Erro", "Não foi possível carregar os detalhes da moto.");
+      Alert.alert(t("alertError"), t("errorLoadingMotoDetail"));
       navigation.goBack();
     } finally {
       setLoading(false);
@@ -41,22 +43,22 @@ export default function DetalhesMotoScreen({ route, navigation }) {
 
   const handleDelete = async () => {
     Alert.alert(
-      "Confirmar Exclusão",
-      `Tem certeza que deseja apagar a moto de placa ${moto.placa}?`,
+      t("confirmDeleteTitle"),
+      t("confirmDeleteMessageMoto", { placa: moto.placa }),
       [
-        { text: "Cancelar", style: "cancel" },
+        { text: t("cancelButton", "Cancelar"), style: "cancel" },
         {
-          text: "Sim, Apagar",
+          text: t("deleteButton"),
           style: "destructive",
           onPress: async () => {
             setLoading(true);
             try {
               await apiJava.delete(`/moto/${moto.id}`);
-              Alert.alert("Sucesso", "Moto apagada do sistema.");
+              Alert.alert(t("alertSuccess"), t("alertSuccessMotoDeleted"));
               navigation.goBack();
             } catch (error) {
               console.error("Erro ao apagar moto:", error);
-              Alert.alert("Erro", "Não foi possível apagar a moto.");
+              Alert.alert(t("alertError"), t("alertErrorMotoDeleted"));
             } finally {
               setLoading(false);
             }
@@ -76,26 +78,37 @@ export default function DetalhesMotoScreen({ route, navigation }) {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Detalhes da Moto</Text>
+      <Text style={styles.title}>{t("titleDetalhesMoto")}</Text>
       <View style={styles.detailsCard}>
-        <Text style={styles.detailItem}>ID: {moto.id}</Text>
-        <Text style={styles.detailItem}>Placa: {moto.placa}</Text>
-        <Text style={styles.detailItem}>Chassi: {moto.chassi}</Text>
-        <Text style={styles.detailItem}>Modelo: {moto.modeloMoto}</Text>
-        <Text style={styles.detailItem}>Ano: {moto.ano}</Text>
-        <Text style={styles.detailItem}>Status: {moto.statusMoto}</Text>
-        <Text style={styles.detailItem}>Filial: {moto.filial.nome}</Text>
+        <Text style={styles.detailItem}>
+          {t("motoPlaca")}: {moto.placa}
+        </Text>
+        <Text style={styles.detailItem}>
+          {t("motoChassi")}: {moto.chassi}
+        </Text>
+        <Text style={styles.detailItem}>
+          {t("motoModelo")}: {moto.modeloMoto}
+        </Text>
+        <Text style={styles.detailItem}>
+          {t("motoAno")}: {moto.ano}
+        </Text>
+        <Text style={styles.detailItem}>
+          {t("motoStatus")}: {moto.statusMoto}
+        </Text>
+        <Text style={styles.detailItem}>
+          {t("motoFilial")}: {moto.filial.nome}
+        </Text>
       </View>
       <View style={styles.buttonContainer}>
         <Button
-          title="Editar Moto"
+          title={t("editButton")}
           onPress={() => navigation.navigate("EditarMoto", { moto: moto })}
           color={colors.primary}
         />
       </View>
       <View style={styles.buttonContainer}>
         <Button
-          title="Apagar Moto"
+          title={t("deleteButton")}
           onPress={handleDelete}
           color={colors.danger}
         />

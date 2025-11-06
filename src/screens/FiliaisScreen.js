@@ -4,11 +4,13 @@ import { View, Text, Button, StyleSheet, FlatList, ActivityIndicator, TouchableO
 import { useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../contexts/ThemeContext';
 import { apiJava } from '../services/api';
+import { useTranslation } from 'react-i18next'; // 1. IMPORTE O HOOK
 
 export default function FiliaisScreen({ navigation }) {
     const [filiais, setFiliais] = useState([]);
     const [loading, setLoading] = useState(false);
     const { colors } = useTheme();
+    const { t } = useTranslation(); // 2. INICIE O HOOK DE TRADUÇÃO
     const styles = getStyles(colors);
 
     const carregarFiliais = async () => {
@@ -17,7 +19,8 @@ export default function FiliaisScreen({ navigation }) {
             const response = await apiJava.get('/filial');
             setFiliais(response.data.content || []);
         } catch (error) {
-            Alert.alert("Erro", "Não foi possível carregar la lista de filiais.");
+            // 3. TRADUZA OS ALERTAS
+            Alert.alert(t('alertError'), t('errorLoadingFiliais'));
         } finally {
             setLoading(false);
         }
@@ -27,20 +30,20 @@ export default function FiliaisScreen({ navigation }) {
 
     const handleDelete = (filialId, filialNome) => {
         Alert.alert(
-            "Confirmar Exclusão",
-            `Tem certeza que deseja apagar a filial "${filialNome}"? Todas as vagas e motos associadas podem ser perdidas.`,
+            t('confirmDeleteTitle'), // 3. TRADUZA OS ALERTAS
+            t('confirmDeleteMessageFilial', { nome: filialNome }), // Usando interpolação
             [
-                { text: "Cancelar", style: "cancel" },
+                { text: t('cancelButton', 'Cancelar'), style: "cancel" },
                 { 
-                    text: "Sim, Apagar", 
+                    text: t('deleteButton'), 
                     style: "destructive", 
                     onPress: async () => {
                         try {
                             await apiJava.delete(`/filial/${filialId}`);
-                            Alert.alert("Sucesso", "Filial apagada.");
+                            Alert.alert(t('alertSuccess'), t('alertSuccessFilialDeleted'));
                             carregarFiliais();
                         } catch (error) {
-                            Alert.alert("Erro", "Não foi possível apagar a filial.");
+                            Alert.alert(t('alertError'), t('alertErrorFilialDeleted'));
                         }
                     }
                 }
@@ -50,25 +53,25 @@ export default function FiliaisScreen({ navigation }) {
 
     const renderFilialItem = ({ item }) => (
         <View style={styles.filialItem}>
-            {/* Área clicável para ver o pátio */}
             <TouchableOpacity onPress={() => navigation.navigate('PatioVisualizacao', { filialId: item.id, filialNome: item.nome })}>
                 <Text style={styles.filialNome}>{item.nome}</Text>
                 <Text style={styles.filialEndereco}>{item.cidade}, {item.siglaEstado}</Text>
             </TouchableOpacity>
 
-            {/* Container para os botões de ação */}
             <View style={styles.actionsContainer}>
                 <TouchableOpacity 
                     style={[styles.actionButton, styles.editButton]}
                     onPress={() => navigation.navigate('EditarFilial', { filial: item })}
                 >
-                    <Text style={styles.actionButtonText}>Editar</Text>
+                    {/* 3. TRADUZA OS BOTÕES */}
+                    <Text style={styles.actionButtonText}>{t('editButton')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity 
                     style={[styles.actionButton, styles.deleteButton]}
                     onPress={() => handleDelete(item.id, item.nome)}
                 >
-                    <Text style={styles.actionButtonText}>Excluir</Text>
+                    {/* 3. TRADUZA OS BOTÕES */}
+                    <Text style={styles.actionButtonText}>{t('deleteButton')}</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -78,7 +81,7 @@ export default function FiliaisScreen({ navigation }) {
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <Button
-                    title="Registrar Nova Filial"
+                    title={t('titleRegisterFilial')} // 3. TRADUZA OS BOTÕES
                     color={colors.primary}
                     onPress={() => navigation.navigate('RegistrarFilial')}
                 />
@@ -91,7 +94,8 @@ export default function FiliaisScreen({ navigation }) {
                     data={filiais}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={renderFilialItem}
-                    ListEmptyComponent={<Text style={styles.emptyListText}>Nenhuma filial encontrada.</Text>}
+                    // 3. TRADUZA OS TEXTOS DE FEEDBACK
+                    ListEmptyComponent={<Text style={styles.emptyListText}>{t('emptyVagas')}</Text>}
                     contentContainerStyle={{ paddingHorizontal: 16 }}
                     onRefresh={carregarFiliais}
                     refreshing={loading}
@@ -101,6 +105,7 @@ export default function FiliaisScreen({ navigation }) {
     );
 }
 
+// A função de estilos não muda
 const getStyles = (colors) => StyleSheet.create({
     container: { flex: 1, backgroundColor: colors.background },
     header: { padding: 16, borderBottomWidth: 1, borderBottomColor: colors.border },
@@ -116,9 +121,8 @@ const getStyles = (colors) => StyleSheet.create({
         shadowOffset: { width: 0, height: 2 } 
     },
     filialNome: { fontSize: 18, fontWeight: 'bold', color: colors.text },
-    filialEndereco: { fontSize: 14, color: colors.textSecondary, marginTop: 5, marginBottom: 16 }, // Adicionado margem inferior
+    filialEndereco: { fontSize: 14, color: colors.textSecondary, marginTop: 5, marginBottom: 16 },
     emptyListText: { textAlign: 'center', marginTop: 50, color: colors.textSecondary },
-
     actionsContainer: {
         flexDirection: 'row',
         justifyContent: 'flex-end',

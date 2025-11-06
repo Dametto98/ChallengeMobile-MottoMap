@@ -3,40 +3,48 @@ import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import ThemeToggleButton from "../components/ThemeToggleButton";
-export default function HomeScreen({ navigation }) {
-  const { signOut, user } = useAuth();
-  const { colors } = useTheme();
-  const styles = getStyles(colors);
+import { useTranslation } from "react-i18next";
 
-  const welcomeMessage = "Bem-vindo(a)!";
+export default function HomeScreen({ navigation }) {
+  const { signOut } = useAuth();
+  const { colors } = useTheme();
+  const { t } = useTranslation();
+  const styles = getStyles(colors);
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>{welcomeMessage}</Text>
-          <Text style={styles.subtitle}>Selecione uma opção para começar</Text>
+          <Text style={styles.title}>{t("welcome")}</Text>
+          <Text style={styles.subtitle}>{t("selectOption")}</Text>
           <ThemeToggleButton />
         </View>
-
         <View style={styles.menuContainer}>
           <TouchableOpacity
             style={styles.menuButton}
             onPress={() => navigation.navigate("MotosList")}
           >
-            <Text style={styles.menuButtonText}>🏍️ Gerenciar Motos</Text>
+            <Text style={styles.menuButtonText}>{t("menuMotos")}</Text>
           </TouchableOpacity>
-
+          <TouchableOpacity
+            style={styles.menuButton}
+            onPress={() => navigation.navigate("PatioVisualizacao")}
+          >
+            <Text style={styles.menuButtonText}>{t("menuPatio")}</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.menuButton}
             onPress={() => navigation.navigate("Filiais")}
           >
-            <Text style={styles.menuButtonText}>🏢 Nossas Filiais</Text>
+            <Text style={styles.menuButtonText}>{t("menuFiliais")}</Text>
           </TouchableOpacity>
         </View>
-
         <View style={styles.logoutButtonContainer}>
-          <Button title="Sair do App" color={colors.danger} onPress={signOut} />
+          <Button
+            title={t("logoutButton")}
+            color={colors.danger}
+            onPress={signOut}
+          />
         </View>
       </View>
     </SafeAreaView>

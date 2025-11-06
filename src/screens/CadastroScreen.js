@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
 import { apiJava } from "../services/api";
+import { useTranslation } from 'react-i18next';
 
 export default function CadastroScreen({ navigation }) {
   const [nome, setNome] = useState("");
@@ -22,15 +23,16 @@ export default function CadastroScreen({ navigation }) {
 
   const { colors } = useTheme();
   const styles = getStyles(colors);
+  const { t } = useTranslation();
 
   const handleCadastro = async () => {
     setError("");
     if (!nome || !email || !senha || !confirmarSenha) {
-      setError("Por favor, preencha todos os campos.");
+      setError(t('errorFillFields'));
       return;
     }
     if (senha !== confirmarSenha) {
-      setError("As senhas não coincidem.");
+      setError(t('errorPasswordsMismatch'));
       return;
     }
     setLoading(true);
@@ -43,8 +45,8 @@ export default function CadastroScreen({ navigation }) {
         filial: 1,
       });
       Alert.alert(
-        "Sucesso!",
-        "Sua conta foi criada. Agora você pode fazer o login.",
+        t('successAccountCreated'),
+        t('successAccountPrompt'),
         [{ text: "OK", onPress: () => navigation.navigate("Login") }]
       );
     } catch (err) {
@@ -59,18 +61,18 @@ export default function CadastroScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>Crie sua Conta</Text>
+        <Text style={styles.title}>{t('createAccount')}</Text>
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
         <TextInput
           style={styles.input}
-          placeholder="Nome completo"
+          placeholder={t('fullName')}
           placeholderTextColor={colors.textSecondary}
           value={nome}
           onChangeText={setNome}
         />
         <TextInput
           style={styles.input}
-          placeholder="E-mail"
+          placeholder={t('email')}
           placeholderTextColor={colors.textSecondary}
           value={email}
           onChangeText={setEmail}
@@ -79,7 +81,7 @@ export default function CadastroScreen({ navigation }) {
         />
         <TextInput
           style={styles.input}
-          placeholder="Senha"
+          placeholder={t('password')}
           placeholderTextColor={colors.textSecondary}
           value={senha}
           onChangeText={setSenha}
@@ -87,7 +89,7 @@ export default function CadastroScreen({ navigation }) {
         />
         <TextInput
           style={styles.input}
-          placeholder="Confirme a Senha"
+          placeholder={t('confirmPassword')}
           placeholderTextColor={colors.textSecondary}
           value={confirmarSenha}
           onChangeText={setConfirmarSenha}
@@ -103,7 +105,7 @@ export default function CadastroScreen({ navigation }) {
         ) : (
           <View style={styles.buttonContainer}>
             <Button
-              title="Cadastrar"
+              title={t('registerButton')}
               onPress={handleCadastro}
               color={colors.primary}
             />

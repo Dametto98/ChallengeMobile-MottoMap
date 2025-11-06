@@ -12,6 +12,7 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 import { useTheme } from "../contexts/ThemeContext";
 import { apiJava } from "../services/api";
+import { useTranslation } from 'react-i18next'; // 1. IMPORTE O HOOK
 
 export default function DetalhesFilialScreen({ route, navigation }) {
   const { filialId } = route.params;
@@ -19,6 +20,7 @@ export default function DetalhesFilialScreen({ route, navigation }) {
   const [loading, setLoading] = useState(true);
 
   const { colors } = useTheme();
+  const { t } = useTranslation(); // 2. INICIE O HOOK DE TRADUÇÃO
   const styles = getStyles(colors);
 
   const carregarDetalhes = async () => {
@@ -29,7 +31,8 @@ export default function DetalhesFilialScreen({ route, navigation }) {
       setFilial(response.data);
     } catch (error) {
       console.error("Erro ao buscar detalhes da filial:", error);
-      Alert.alert("Erro", "Não foi possível carregar os detalhes da filial.");
+      // 3. TRADUZA OS ALERTAS
+      Alert.alert(t('alertError'), t('errorLoadingFilialDetail'));
       navigation.goBack();
     } finally {
       setLoading(false);
@@ -44,22 +47,22 @@ export default function DetalhesFilialScreen({ route, navigation }) {
 
   const handleDelete = () => {
     Alert.alert(
-      "Confirmar Exclusão",
-      `Tem certeza que deseja apagar a filial "${filial.nome}"?`,
+      t('confirmDeleteTitle'), // 3. TRADUZA OS ALERTAS
+      t('confirmDeleteMessageFilial', { nome: filial.nome }), // Usando interpolação
       [
-        { text: "Cancelar", style: "cancel" },
+        { text: t('cancelButton', 'Cancelar'), style: "cancel" },
         {
-          text: "Sim, Apagar",
+          text: t('deleteButton'),
           style: "destructive",
           onPress: async () => {
             setLoading(true);
             try {
               await apiJava.delete(`/filial/${filial.id}`);
-              Alert.alert("Sucesso", "Filial apagada do sistema.");
+              Alert.alert(t('alertSuccess'), t('alertSuccessFilialDeleted'));
               navigation.goBack();
             } catch (error) {
               console.error("Erro ao apagar filial:", error);
-              Alert.alert("Erro", "Não foi possível apagar a filial.");
+              Alert.alert(t('alertError'), t('alertErrorFilialDeleted'));
               setLoading(false);
             }
           },
@@ -80,19 +83,20 @@ export default function DetalhesFilialScreen({ route, navigation }) {
     <ScrollView style={styles.container}>
       <Text style={styles.title}>{filial.nome}</Text>
       <View style={styles.detailsCard}>
-        <Text style={styles.detailItem}>Endereço: {filial.endereco}</Text>
-        <Text style={styles.detailItem}>Cidade: {filial.cidade}</Text>
-        <Text style={styles.detailItem}>Estado: {filial.siglaEstado}</Text>
+        {/* 3. TRADUZA OS LABELS */}
+        <Text style={styles.detailItem}>{t('labelEndereco')}: {filial.endereco}</Text>
+        <Text style={styles.detailItem}>{t('labelCidade')}: {filial.cidade}</Text>
+        <Text style={styles.detailItem}>{t('labelUF')}: {filial.siglaEstado}</Text>
         <Text style={styles.detailItem}>
-          Capacidade: {filial.capacidadeMaxima} motos
+          {t('labelCapacidade')}: {filial.capacidadeMaxima} motos
         </Text>
         <Text style={styles.detailItem}>
-          Pátio: {filial.numeroLinha} linhas x {filial.numeroColuna} colunas
+          {t('titlePatio')}: {filial.numeroLinha} x {filial.numeroColuna}
         </Text>
       </View>
       <View style={styles.buttonContainer}>
         <Button
-          title="Editar Filial"
+          title={t('editButton')} // 3. TRADUZA OS BOTÕES
           onPress={() =>
             navigation.navigate("EditarFilial", { filial: filial })
           }
@@ -101,7 +105,7 @@ export default function DetalhesFilialScreen({ route, navigation }) {
       </View>
       <View style={styles.buttonContainer}>
         <Button
-          title="Apagar Filial"
+          title={t('deleteButton')} // 3. TRADUZA OS BOTÕES
           onPress={handleDelete}
           color={colors.danger}
         />
@@ -110,6 +114,7 @@ export default function DetalhesFilialScreen({ route, navigation }) {
   );
 }
 
+// A função de estilos não muda
 const getStyles = (colors) =>
   StyleSheet.create({
     container: { flex: 1, padding: 20, backgroundColor: colors.background },
