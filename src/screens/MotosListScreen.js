@@ -12,6 +12,7 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 import { useTheme } from "../contexts/ThemeContext";
 import { apiJava } from "../services/api";
+import { useTranslation } from 'react-i18next';
 
 const StatusBadge = ({ status }) => {
   const { colors } = useTheme();

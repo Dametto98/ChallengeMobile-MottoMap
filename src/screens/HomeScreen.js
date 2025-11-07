@@ -28,12 +28,6 @@ export default function HomeScreen({ navigation }) {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.menuButton}
-            onPress={() => navigation.navigate("PatioVisualizacao")}
-          >
-            <Text style={styles.menuButtonText}>{t("menuPatio")}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.menuButton}
             onPress={() => navigation.navigate("Filiais")}
           >
             <Text style={styles.menuButtonText}>{t("menuFiliais")}</Text>

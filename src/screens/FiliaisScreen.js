@@ -4,7 +4,7 @@ import { View, Text, Button, StyleSheet, FlatList, ActivityIndicator, TouchableO
 import { useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '../contexts/ThemeContext';
 import { apiJava } from '../services/api';
-import { useTranslation } from 'react-i18next'; // 1. IMPORTE O HOOK
+import { useTranslation } from 'react-i18next'; 
 
 export default function FiliaisScreen({ navigation }) {
     const [filiais, setFiliais] = useState([]);
