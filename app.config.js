@@ -20,7 +20,7 @@ module.exports = {
     icon: "./assets/images/mottomap-logo.png",
     
     eas: {
-        "projectId": "389af45f-5ad5-4414-87e3-4c20e77a443d" 
+      "projectId": "389af45f-5ad5-4414-87e3-4c20e77a443d"
     },
 
     extra: {
