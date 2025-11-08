@@ -17,6 +17,9 @@ import RegistrarFilialScreen from "../screens/RegistrarFilialScreen";
 import EditarFilialScreen from "../screens/EditarFilialScreen";
 import PatioVisualizacaoScreen from "../screens/PatioVisualization";
 import { useTranslation } from 'react-i18next';
+import RegistrarProblemaScreen from '../screens/RegistrarProblemaScreen';
+import EditarProblemaScreen from '../screens/EditarProblemaScreen';
+import ProblemasListScreen from '../screens/ProblemasListScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -119,6 +122,21 @@ function AppRoutes() {
         name="PatioVisualizacao"
         component={PatioVisualizacaoScreen}
         options={{ title: t('titlePatio') }}
+      />
+      <Stack.Screen 
+        name="RegistrarProblema" 
+        component={RegistrarProblemaScreen} 
+        options={{ title: t('titleReportProblem', 'Reportar Problema') 
+      }}/>
+      <Stack.Screen 
+        name="EditarProblema" 
+        component={EditarProblemaScreen} 
+        options={{ title: t('titleEditarProblema', 'Editar Problema') }} 
+      />
+      <Stack.Screen 
+        name="ProblemasList" 
+        component={ProblemasListScreen} 
+        options={{ title: t('labelProblemasList') }} 
       />
     </Stack.Navigator>
   );

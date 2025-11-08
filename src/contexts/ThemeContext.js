@@ -14,6 +14,9 @@ const themeColors = {
     black: "#121212",
     status_ok: "#D4EDDA",
     status_danger: "#F8D7DA",
+    secondary: '#FFA000',
+    status_ok: '#D4EDDA',
+    status_danger: '#F8D7DA',
   },
   dark: {
     primary: "#388E3C",
@@ -27,6 +30,9 @@ const themeColors = {
     black: "#121212",
     status_ok: "#1A3D25",
     status_danger: "#4F1B1F",
+    secondary: '#FFC107',
+    status_ok: '#1A3D25',
+    status_danger: '#4F1B1F',
   },
 };
 

@@ -37,8 +37,11 @@ export const AuthProvider = ({ children }) => {
             });
             console.log("[AuthContext] 2. Login na API com sucesso.");
 
-            const { token } = response.data;
-            const userData = { email };
+            // --- ALTERAÇÃO AQUI ---
+            const { token, usuarioId, nomeUsuario } = response.data;
+
+            // Agora salvamos o objeto de usuário completo
+            const userData = { id: usuarioId, nome: nomeUsuario, email: email };
             setUser(userData);
 
             console.log("[AuthContext] 3. Salvando dados no AsyncStorage...");

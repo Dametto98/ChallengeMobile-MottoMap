@@ -108,6 +108,36 @@
     "emptyVagas": "No hay espacios registrados para esta sucursal.",
 
     "errorLoginGeneric": "Ocurrió un error inesperado al intentar iniciar sesión.",
-    "errorNetwork": "No se pudo conectar al servidor. Verifica tu red."
+    "errorNetwork": "No se pudo conectar al servidor. Verifica tu red.",
+
+    "titleReportProblem": "Reportar Problema",
+    "reportProblemButton": "Reportar Problema",
+    "labelTipoProblema": "Tipo de Problema",
+    "placeholderSelectProblemType": "Seleccione el tipo...",
+    "labelDescricao": "Descripción del Problema",
+    "placeholderDescricao": "Describa lo que sucedió...",
+    "alertSuccessProblemRegistered": "Problema registrado con éxito.",
+    "alertErrorProblemRegistered": "No se pudo registrar el problema.",
+
+    "problemTypeMechanical": "Mecánico",
+    "problemTypeElectrical": "Eléctrico",
+    "problemTypeBodywork": "Carrocería (Estético)",
+    "problemTypeSecurity": "Seguridad",
+    "problemTypeLegal": "Documentación (Legal)",
+    "problemTypeOther": "Otro",
+    "errorDescriptionLength": "La descripción debe tener al menos 10 caracteres.",
+
+    "titleEditarProblema": "Editar Problema",
+    "labelProblemasList": "Problemas",
+    "emptyProblemas": "No hay problemas reportados para esta moto.",
+    "confirmDeleteProblemaTitle": "Confirmar Eliminación",
+    "confirmDeleteProblemaMessage": "¿Estás seguro de que deseas eliminar este problema?",
+    "alertSuccessProblemaDeleted": "Problema eliminado.",
+    "alertErrorProblemaDeleted": "No se pudo eliminar el problema.",
+    "alertSuccessProblemaUpdated": "Problema actualizado.",
+    "alertErrorProblemaUpdated": "No se pudo actualizar el problema.",
+    "labelResolvido": "¿Problema Resuelto?",
+    "errorLoadingProblems": "No se pudieron cargar los problemas.",
+    "cancelButton": "Cancelar"
   }
 }
