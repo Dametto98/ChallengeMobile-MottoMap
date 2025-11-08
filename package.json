@@ -16,7 +16,6 @@
     "axios": "^1.12.2",
     "expo": "~53.0.23",
     "expo-constants": "~17.1.7",
-    "expo-device": "~7.1.4",
     "expo-localization": "~16.1.6",
     "expo-notifications": "~0.31.4",
     "expo-permissions": "^14.4.0",

@@ -1,6 +1,5 @@
 import { Alert, Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
-import * as Device from 'expo-device';
 import { apiJava } from './api'; // Importamos nossa API
 import i18n from './i18n'; // Para traduzir as mensagens
 
@@ -15,11 +14,6 @@ Notifications.setNotificationHandler({
 
 export async function registerForPushNotificationsAsync() {
   let token;
-
-  // if (!Device.isDevice) {
-  //   console.warn("Push Notifications só funcionam em dispositivos físicos.");
-  //   return;
-  // }
 
   // Pede permissão
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
