@@ -11,12 +11,12 @@ import {
 } from "react-native";
 import { useTheme } from "../contexts/ThemeContext";
 import { apiJava } from "../services/api";
-import { useTranslation } from 'react-i18next'; // 1. IMPORTE O HOOK
+import { useTranslation } from "react-i18next";
 
 export default function EditarFilialScreen({ route, navigation }) {
   const { filial } = route.params;
   const { colors } = useTheme();
-  const { t } = useTranslation(); // 2. INICIE O HOOK DE TRADUÇÃO
+  const { t } = useTranslation();
   const styles = getStyles(colors);
 
   const [nome, setNome] = useState(filial.nome);
@@ -34,12 +34,11 @@ export default function EditarFilialScreen({ route, navigation }) {
 
   const validate = () => {
     const newErrors = {};
-    // 3. TRADUZA AS MENSAGENS DE ERRO
-    if (!nome) newErrors.nome = t('errorRequired');
+    if (!nome) newErrors.nome = t("errorRequired");
     if (!siglaEstado || siglaEstado.length !== 2)
-      newErrors.siglaEstado = t('errorUFLength');
+      newErrors.siglaEstado = t("errorUFLength");
     if (!numeroLinha || isNaN(numeroLinha))
-      newErrors.numeroLinha = t('errorLinesInvalid');
+      newErrors.numeroLinha = t("errorLinesInvalid");
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -60,12 +59,11 @@ export default function EditarFilialScreen({ route, navigation }) {
 
     try {
       await apiJava.put(`/filial/${filial.id}`, filialData);
-      // 3. TRADUZA OS ALERTAS
-      Alert.alert(t('alertSuccess'), t('alertSuccessFilialUpdated'));
-      navigation.navigate("Filiais"); // Volta para a lista
+      Alert.alert(t("alertSuccess"), t("alertSuccessFilialUpdated"));
+      navigation.navigate("Filiais");
     } catch (error) {
       console.error("Erro ao atualizar filial:", error.response?.data || error);
-      Alert.alert(t('alertError'), t('alertErrorFilialUpdated'));
+      Alert.alert(t("alertError"), t("alertErrorFilialUpdated"));
     } finally {
       setLoading(false);
     }
@@ -73,8 +71,7 @@ export default function EditarFilialScreen({ route, navigation }) {
 
   return (
     <ScrollView style={styles.container}>
-      {/* 3. TRADUZA OS LABELS */}
-      <Text style={styles.label}>{t('labelNomeFilial')}</Text>
+      <Text style={styles.label}>{t("labelNomeFilial")}</Text>
       <TextInput
         style={styles.input}
         value={nome}
@@ -83,7 +80,7 @@ export default function EditarFilialScreen({ route, navigation }) {
       />
       {errors.nome && <Text style={styles.errorText}>{errors.nome}</Text>}
 
-      <Text style={styles.label}>{t('labelEndereco')}</Text>
+      <Text style={styles.label}>{t("labelEndereco")}</Text>
       <TextInput
         style={styles.input}
         value={endereco}
@@ -91,7 +88,7 @@ export default function EditarFilialScreen({ route, navigation }) {
         placeholderTextColor={colors.textSecondary}
       />
 
-      <Text style={styles.label}>{t('labelCidade')}</Text>
+      <Text style={styles.label}>{t("labelCidade")}</Text>
       <TextInput
         style={styles.input}
         value={cidade}
@@ -99,7 +96,7 @@ export default function EditarFilialScreen({ route, navigation }) {
         placeholderTextColor={colors.textSecondary}
       />
 
-      <Text style={styles.label}>{t('labelUF')}</Text>
+      <Text style={styles.label}>{t("labelUF")}</Text>
       <TextInput
         style={styles.input}
         value={siglaEstado}
@@ -112,7 +109,7 @@ export default function EditarFilialScreen({ route, navigation }) {
         <Text style={styles.errorText}>{errors.siglaEstado}</Text>
       )}
 
-      <Text style={styles.label}>{t('labelLinhas')}</Text>
+      <Text style={styles.label}>{t("labelLinhas")}</Text>
       <TextInput
         style={styles.input}
         value={numeroLinha}
@@ -124,22 +121,22 @@ export default function EditarFilialScreen({ route, navigation }) {
         <Text style={styles.errorText}>{errors.numeroLinha}</Text>
       )}
 
-      <Text style={styles.label}>{t('labelColunas')}</Text>
+      <Text style={styles.label}>{t("labelColunas")}</Text>
       <TextInput
         style={styles.input}
         value={numeroColuna}
         onChangeText={setNumeroColuna}
         keyboardType="numeric"
-        placeholderTextColor={colors.textSecondary} // Adicionado placeholderTextColor
+        placeholderTextColor={colors.textSecondary}
       />
 
-      <Text style={styles.label}>{t('labelCapacidade')}</Text>
+      <Text style={styles.label}>{t("labelCapacidade")}</Text>
       <TextInput
         style={styles.input}
         value={capacidadeMaxima}
         onChangeText={setCapacidadeMaxima}
         keyboardType="numeric"
-        placeholderTextColor={colors.textSecondary} // Adicionado placeholderTextColor
+        placeholderTextColor={colors.textSecondary}
       />
 
       {loading ? (
@@ -151,7 +148,7 @@ export default function EditarFilialScreen({ route, navigation }) {
       ) : (
         <View style={styles.buttonContainer}>
           <Button
-            title={t('updateButton')} // 3. TRADUZA O BOTÃO
+            title={t("updateButton")}
             onPress={handleUpdate}
             color={colors.primary}
           />

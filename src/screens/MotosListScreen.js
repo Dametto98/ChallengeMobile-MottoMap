@@ -12,7 +12,7 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 import { useTheme } from "../contexts/ThemeContext";
 import { apiJava } from "../services/api";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 const StatusBadge = ({ status }) => {
   const { colors } = useTheme();
@@ -37,9 +37,11 @@ const MotoCard = ({ item, onPress }) => {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
       <View style={{ flex: 1 }}>
-        <Text style={styles.cardTitle}>{t('motoPlaca')}: {item.placa}</Text>
+        <Text style={styles.cardTitle}>
+          {t("motoPlaca")}: {item.placa}
+        </Text>
         <Text style={styles.cardSubtitle}>
-          {t('motoModelo')}: {item.modeloMoto} - {t('motoAno')}: {item.ano}
+          {t("motoModelo")}: {item.modeloMoto} - {t("motoAno")}: {item.ano}
         </Text>
       </View>
       <StatusBadge status={item.statusMoto} />
@@ -61,7 +63,7 @@ export default function MotosListScreen({ navigation }) {
       setMotos(response.data.content || []);
     } catch (error) {
       console.error("Erro ao carregar motos:", error);
-      Alert.alert(t('alertError'), t('errorLoadingMotos'));
+      Alert.alert(t("alertError"), t("errorLoadingMotos"));
     } finally {
       setLoading(false);
     }
@@ -94,9 +96,7 @@ export default function MotosListScreen({ navigation }) {
             />
           )}
           ListEmptyComponent={
-            <Text style={styles.emptyListText}>
-              {t('emptyMotos')}
-            </Text>
+            <Text style={styles.emptyListText}>{t("emptyMotos")}</Text>
           }
           contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 16 }}
           onRefresh={carregarMotos}

@@ -126,12 +126,12 @@ function AppRoutes() {
       <Stack.Screen 
         name="RegistrarProblema" 
         component={RegistrarProblemaScreen} 
-        options={{ title: t('titleReportProblem', 'Reportar Problema') 
+        options={{ title: t('titleReportProblem') 
       }}/>
       <Stack.Screen 
         name="EditarProblema" 
         component={EditarProblemaScreen} 
-        options={{ title: t('titleEditarProblema', 'Editar Problema') }} 
+        options={{ title: t('titleEditarProblema') }} 
       />
       <Stack.Screen 
         name="ProblemasList" 

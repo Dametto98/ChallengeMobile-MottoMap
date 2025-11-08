@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { apiJava } from "../services/api";
 import { useTheme } from "../contexts/ThemeContext";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 export default function PatioVisualizacaoScreen({ route, navigation }) {
   const { filialId, filialNome } = route.params;
@@ -30,12 +30,11 @@ export default function PatioVisualizacaoScreen({ route, navigation }) {
     try {
       setLoading(true);
       setError(null);
-      // 3. USA O ID DINÂMICO NA CHAMADA DA API
       const response = await apiJava.get(`/filial/${filialId}/posicoes`);
       setPatioData(response.data);
     } catch (err) {
       console.error("Erro ao buscar dados do pátio:", err);
-      setError(t('errorLoadingPatio'));
+      setError(t("errorLoadingPatio"));
     } finally {
       setLoading(false);
     }
@@ -88,32 +87,42 @@ export default function PatioVisualizacaoScreen({ route, navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-                <View style={styles.statsContainer}>
-                    <Text style={styles.statsText}>{t('patioOccupancy')}: </Text>
-                    <Text style={styles.statsValue}>{vagasOcupadas} / {totalVagas}</Text>
-                </View>
-                <View style={styles.legendContainer}>
-                    <View style={styles.legendItem}>
-                        <View style={[styles.legendColorBox, {backgroundColor: colors.status_ok}]} />
-                        <Text style={styles.legendText}>{t('legendFree')}</Text>
-                    </View>
-                    <View style={styles.legendItem}>
-                        <View style={[styles.legendColorBox, {backgroundColor: colors.status_danger}]} />
-                        <Text style={styles.legendText}>{t('legendOccupied')}</Text>
-                    </View>
-                </View>
-            </View>
+        <View style={styles.statsContainer}>
+          <Text style={styles.statsText}>{t("patioOccupancy")}: </Text>
+          <Text style={styles.statsValue}>
+            {vagasOcupadas} / {totalVagas}
+          </Text>
+        </View>
+        <View style={styles.legendContainer}>
+          <View style={styles.legendItem}>
+            <View
+              style={[
+                styles.legendColorBox,
+                { backgroundColor: colors.status_ok },
+              ]}
+            />
+            <Text style={styles.legendText}>{t("legendFree")}</Text>
+          </View>
+          <View style={styles.legendItem}>
+            <View
+              style={[
+                styles.legendColorBox,
+                { backgroundColor: colors.status_danger },
+              ]}
+            />
+            <Text style={styles.legendText}>{t("legendOccupied")}</Text>
+          </View>
+        </View>
+      </View>
 
       <FlatList
         data={patioData}
         renderItem={renderVaga}
         keyExtractor={(item) => item.id.toString()}
-        numColumns={4} // Aumentado para melhor visualização
+        numColumns={4}
         contentContainerStyle={{ padding: 8 }}
         ListEmptyComponent={
-          <Text style={styles.emptyText}>
-            {t('emptyVagas')}
-          </Text>
+          <Text style={styles.emptyText}>{t("emptyVagas")}</Text>
         }
         refreshing={loading}
         onRefresh={carregarPatio}

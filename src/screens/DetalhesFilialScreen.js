@@ -12,7 +12,7 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 import { useTheme } from "../contexts/ThemeContext";
 import { apiJava } from "../services/api";
-import { useTranslation } from 'react-i18next'; // 1. IMPORTE O HOOK
+import { useTranslation } from "react-i18next";
 
 export default function DetalhesFilialScreen({ route, navigation }) {
   const { filialId } = route.params;
@@ -20,7 +20,7 @@ export default function DetalhesFilialScreen({ route, navigation }) {
   const [loading, setLoading] = useState(true);
 
   const { colors } = useTheme();
-  const { t } = useTranslation(); // 2. INICIE O HOOK DE TRADUÇÃO
+  const { t } = useTranslation();
   const styles = getStyles(colors);
 
   const carregarDetalhes = async () => {
@@ -31,8 +31,7 @@ export default function DetalhesFilialScreen({ route, navigation }) {
       setFilial(response.data);
     } catch (error) {
       console.error("Erro ao buscar detalhes da filial:", error);
-      // 3. TRADUZA OS ALERTAS
-      Alert.alert(t('alertError'), t('errorLoadingFilialDetail'));
+      Alert.alert(t("alertError"), t("errorLoadingFilialDetail"));
       navigation.goBack();
     } finally {
       setLoading(false);
@@ -47,22 +46,22 @@ export default function DetalhesFilialScreen({ route, navigation }) {
 
   const handleDelete = () => {
     Alert.alert(
-      t('confirmDeleteTitle'), // 3. TRADUZA OS ALERTAS
-      t('confirmDeleteMessageFilial', { nome: filial.nome }), // Usando interpolação
+      t("confirmDeleteTitle"),
+      t("confirmDeleteMessageFilial", { nome: filial.nome }),
       [
-        { text: t('cancelButton', 'Cancelar'), style: "cancel" },
+        { text: t("cancelButton", "Cancelar"), style: "cancel" },
         {
-          text: t('deleteButton'),
+          text: t("deleteButton"),
           style: "destructive",
           onPress: async () => {
             setLoading(true);
             try {
               await apiJava.delete(`/filial/${filial.id}`);
-              Alert.alert(t('alertSuccess'), t('alertSuccessFilialDeleted'));
+              Alert.alert(t("alertSuccess"), t("alertSuccessFilialDeleted"));
               navigation.goBack();
             } catch (error) {
               console.error("Erro ao apagar filial:", error);
-              Alert.alert(t('alertError'), t('alertErrorFilialDeleted'));
+              Alert.alert(t("alertError"), t("alertErrorFilialDeleted"));
               setLoading(false);
             }
           },
@@ -84,19 +83,25 @@ export default function DetalhesFilialScreen({ route, navigation }) {
       <Text style={styles.title}>{filial.nome}</Text>
       <View style={styles.detailsCard}>
         {/* 3. TRADUZA OS LABELS */}
-        <Text style={styles.detailItem}>{t('labelEndereco')}: {filial.endereco}</Text>
-        <Text style={styles.detailItem}>{t('labelCidade')}: {filial.cidade}</Text>
-        <Text style={styles.detailItem}>{t('labelUF')}: {filial.siglaEstado}</Text>
         <Text style={styles.detailItem}>
-          {t('labelCapacidade')}: {filial.capacidadeMaxima} motos
+          {t("labelEndereco")}: {filial.endereco}
         </Text>
         <Text style={styles.detailItem}>
-          {t('titlePatio')}: {filial.numeroLinha} x {filial.numeroColuna}
+          {t("labelCidade")}: {filial.cidade}
+        </Text>
+        <Text style={styles.detailItem}>
+          {t("labelUF")}: {filial.siglaEstado}
+        </Text>
+        <Text style={styles.detailItem}>
+          {t("labelCapacidade")}: {filial.capacidadeMaxima} motos
+        </Text>
+        <Text style={styles.detailItem}>
+          {t("titlePatio")}: {filial.numeroLinha} x {filial.numeroColuna}
         </Text>
       </View>
       <View style={styles.buttonContainer}>
         <Button
-          title={t('editButton')} // 3. TRADUZA OS BOTÕES
+          title={t("editButton")}
           onPress={() =>
             navigation.navigate("EditarFilial", { filial: filial })
           }
@@ -105,7 +110,7 @@ export default function DetalhesFilialScreen({ route, navigation }) {
       </View>
       <View style={styles.buttonContainer}>
         <Button
-          title={t('deleteButton')} // 3. TRADUZA OS BOTÕES
+          title={t("deleteButton")}
           onPress={handleDelete}
           color={colors.danger}
         />
