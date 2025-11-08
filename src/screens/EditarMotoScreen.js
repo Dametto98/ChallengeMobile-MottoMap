@@ -13,7 +13,7 @@ import {
 import { useTheme } from "../contexts/ThemeContext";
 import { apiJava } from "../services/api";
 import DropDownPicker from "react-native-dropdown-picker";
-import { useTranslation } from "react-i18next"; // 1. IMPORTE O HOOK
+import { useTranslation } from "react-i18next"; 
 
 const modelosMotoItems = [
   { label: "POP_110I", value: "POP_110I" },

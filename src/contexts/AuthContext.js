@@ -2,7 +2,7 @@ import React, { createContext, useState, useContext, useEffect } from 'react';
 import { apiJava } from '../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { registerForPushNotificationsAsync } from '../services/notificationService';
-import i18n from '../i18n';
+import i18n from '../services/i18n';
 
 const AuthContext = createContext({});
 

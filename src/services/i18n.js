@@ -2,8 +2,8 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import * as Localization from 'expo-localization'; // 1. IMPORTE A BIBLIOTECA
 
-import pt from './locales/pt.json';
-import es from './locales/es.json';
+import pt from '../locales/pt.json';
+import es from '../locales/es.json';
 
 const locales = Localization.getLocales();
 let deviceLanguage = 'pt'; // Padrão, caso algo falhe

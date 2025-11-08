@@ -2,7 +2,7 @@ import { Alert, Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import { apiJava } from './api'; // Importamos nossa API
-import i18n from '../i18n'; // Para traduzir as mensagens
+import i18n from './i18n'; // Para traduzir as mensagens
 
 // Define como as notificações devem se comportar com o app aberto
 Notifications.setNotificationHandler({
