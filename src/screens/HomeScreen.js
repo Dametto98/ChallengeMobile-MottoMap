@@ -32,6 +32,9 @@ export default function HomeScreen({ navigation }) {
           >
             <Text style={styles.menuButtonText}>{t("menuFiliais")}</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.menuButton} onPress={() => navigation.navigate('About')}>
+              <Text style={styles.menuButtonText}>ℹ️ {t('titleAbout')}</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.logoutButtonContainer}>
           <Button

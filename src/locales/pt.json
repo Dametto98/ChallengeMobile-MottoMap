@@ -138,6 +138,11 @@
     "alertErrorProblemaUpdated": "Não foi possível atualizar o problema.",
     "labelResolvido": "Problema Resolvido?",
     "errorLoadingProblems": "Não foi possível carregar os problemas.",
-    "cancelButton": "Cancelar"
+    "cancelButton": "Cancelar",
+
+    "titleAbout": "Sobre o App",
+    "aboutAppVersion": "Versão do App",
+    "aboutCommitHash": "Versão do Commit",
+    "aboutDevelopersTitle": "Desenvolvedores"
   }
 }

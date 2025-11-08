@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next';
 import RegistrarProblemaScreen from '../screens/RegistrarProblemaScreen';
 import EditarProblemaScreen from '../screens/EditarProblemaScreen';
 import ProblemasListScreen from '../screens/ProblemasListScreen';
+import AboutScreen from '../screens/AboutScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -137,6 +138,11 @@ function AppRoutes() {
         name="ProblemasList" 
         component={ProblemasListScreen} 
         options={{ title: t('labelProblemasList') }} 
+      />
+      <Stack.Screen 
+        name="About" 
+        component={AboutScreen} 
+        options={{ title: t('titleAbout') }} 
       />
     </Stack.Navigator>
   );
