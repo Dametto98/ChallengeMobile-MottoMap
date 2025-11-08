@@ -21,8 +21,8 @@ export default function AboutScreen() {
     { name: "Caike Dametto", rm: "558614", githubUser: "Dametto98" },
   ];
 
-  const appVersion = Constants.expoConfig.extra.appVersion || "1.0.0";
-  const commitHash = Constants.expoConfig.extra.commitHash || "N/A";
+  const appVersion = Constants.expoConfig?.extra?.appVersion || "1.0.0";
+  const commitHash = Constants.expoConfig?.extra?.commitHash || "N/A";
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -73,12 +73,12 @@ const getStyles = (colors) =>
     container: {
       alignItems: "center",
       padding: 20,
-      paddingBottom: 40, 
+      paddingBottom: 40,
     },
     logo: {
-      width: 120, 
+      width: 120,
       height: 120,
-      marginTop: 20, 
+      marginTop: 20,
       marginBottom: 20,
     },
     title: {
@@ -90,8 +90,8 @@ const getStyles = (colors) =>
     infoCard: {
       backgroundColor: colors.card,
       borderRadius: 12,
-      paddingHorizontal: 20, 
-      paddingVertical: 5, 
+      paddingHorizontal: 20,
+      paddingVertical: 5,
       width: "100%",
       borderColor: colors.border,
       borderWidth: 1,
@@ -110,10 +110,10 @@ const getStyles = (colors) =>
       fontWeight: "bold",
     },
     infoValue: {
-      fontSize: 14, 
+      fontSize: 14,
       color: colors.text,
       fontFamily: "monospace",
-      flexShrink: 1, 
+      flexShrink: 1,
       textAlign: "right",
     },
 
@@ -123,7 +123,7 @@ const getStyles = (colors) =>
       color: colors.text,
       marginTop: 35,
       marginBottom: 15,
-      alignSelf: "flex-start", 
+      alignSelf: "flex-start",
     },
     devCard: {
       flexDirection: "row",
@@ -139,9 +139,9 @@ const getStyles = (colors) =>
     devAvatar: {
       width: 60,
       height: 60,
-      borderRadius: 30, 
+      borderRadius: 30,
       marginRight: 15,
-      backgroundColor: colors.border, 
+      backgroundColor: colors.border,
     },
     devInfo: {
       flex: 1,
@@ -158,7 +158,7 @@ const getStyles = (colors) =>
     },
     devGithub: {
       fontSize: 14,
-      color: colors.primary, 
+      color: colors.primary,
       marginTop: 2,
     },
   });

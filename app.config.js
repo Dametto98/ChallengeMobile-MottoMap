@@ -14,17 +14,18 @@ const appVersion = myPackage.version;
 module.exports = {
   expo: {
     name: "MotoMap",
-    slug: "mottomap",
+    slug: "MottoMap",
     version: appVersion, 
     orientation: "portrait",
     icon: "./assets/images/mottomap-logo.png",
     
+    eas: {
+        "projectId": "389af45f-5ad5-4414-87e3-4c20e77a443d" 
+    },
+
     extra: {
       commitHash: commitHash,
       appVersion: appVersion,
-      eas: {
-        "projectId": "389af45f-5ad5-4414-87e3-4c20e77a443d" 
-      }
     },
     
     splash: {
