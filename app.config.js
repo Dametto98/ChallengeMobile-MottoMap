@@ -22,7 +22,7 @@ module.exports = {
     eas: {
       "projectId": "389af45f-5ad5-4414-87e3-4c20e77a443d"
     },
-
+    
     extra: {
       commitHash: commitHash,
       appVersion: appVersion,
@@ -37,17 +37,17 @@ module.exports = {
       "**/*"
     ],
     ios: {
-      supportsTablet: true
+      "supportsTablet": true
     },
     android: {
-      adaptiveIcon: {
-        foregroundImage: "./assets/images/mottomap-logo.png",
-        backgroundColor: "#121212"
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/mottomap-logo.png",
+        "backgroundColor": "#121212"
       },
       "package": "com.mottomap.app" 
     },
     web: {
-      favicon: "./assets/images/mottomap-logo.png"
+      "favicon": "./assets/images/mottomap-logo.png"
     }
   }
 };
