@@ -12,7 +12,7 @@ Projeto de aplicativo mobile para a disciplina de **Mobile Application Developme
 
 | Nome Completo | RM | GitHub |
 | :--- | :--- | :--- |
-| Caike Dametto | RM558614 | [caike-dametto](https://github.com/caike-dametto) |
+| Caike Dametto | RM558614 | [Dametto98](https://github.com/Dametto98) |
 | Guilherme Janunzzi | RM558461 | [GuiJanunzzi](https://github.com/GuiJanunzzi) |
 
 ---
