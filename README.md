@@ -1,17 +1,37 @@
 # 🏍️ MotoMap
 
+![Status](https://img.shields.io/badge/status-concluído-brightgreen)
+![React Native](https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Spring](https://img.shields.io/badge/Spring-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
+
+Projeto de aplicativo mobile para a disciplina de **Mobile Application Development**, focado na criação de uma solução de gerenciamento de frotas para a empresa Mottu.
+
+---
+
 ## 🧑‍💻 Integrantes
 
 | Nome Completo | RM | GitHub |
 | :--- | :--- | :--- |
-| Caike Dametto | RM558614 | [@Dametto98] |
-| Guilherme Janunzzi | RM558461 | [@GuiJanunzzi] |
+| Caike Dametto | RM558614 | [caike-dametto](https://github.com/caike-dametto) |
+| Guilherme Janunzzi | RM558461 | [GuiJanunzzi](https://github.com/GuiJanunzzi) |
+
+---
 
 ## 🎯 Proposta
 
 **MotoMap** é uma aplicação mobile projetada para otimizar o gerenciamento da frota de motocicletas da Mottu. O objetivo é fornecer aos colaboradores uma ferramenta intuitiva para registrar, visualizar e administrar as motos e as filiais, além de monitorar a ocupação dos pátios em tempo real.
 
 O sistema centraliza as informações, permitindo um controle mais eficiente do status e da localização de cada veículo da frota.
+
+---
+
+## ▶️ Demonstração do Aplicativo
+
+Assista ao vídeo de demonstração completa do **MotoMap** em funcionamento, apresentando todas as funcionalidades implementadas:
+
+[**Assista no YouTube**](https://youtu.be/MafGkR2q-VY)
+
+---
 
 ## ✨ Funcionalidades
 
@@ -23,118 +43,103 @@ O aplicativo conta com as seguintes funcionalidades implementadas:
 - ✅ **Tema Dinâmico:** Suporte completo a modo claro (Light Mode) e escuro (Dark Mode), com um botão para alternância manual.
 
 #### Gerenciamento de Motos (CRUD Completo)
-- 📝 **Cadastro de Motos:** Formulário com validações para registrar novas motos na frota.
+- 📝 **Cadastro de Motos:** Formulário com validações, `Dropdown` para seleção de modelo e `Switch` para status.
 - 📖 **Listagem de Motos:** Exibição da lista de motos cadastradas, com atualização em tempo real.
 - ✏️ **Edição de Motos:** Formulário para alterar os dados de uma moto existente.
 - ❌ **Exclusão de Motos:** Funcionalidade para remover uma moto do sistema, com alerta de confirmação.
 
 #### Gerenciamento de Filiais (CRUD Completo)
 - 📝 **Cadastro de Filiais:** Formulário para registrar novas filiais, informando nome, endereço e capacidade do pátio.
-- 📖 **Listagem de Filiais:** Exibição da lista de filiais da empresa.
+- 📖 **Listagem de Filiais:** Exibição da lista de filiais com opções de "Editar" e "Excluir".
 - ✏️ **Edição de Filiais:** Formulário para alterar os dados de uma filial existente.
-- ❌ **Exclusão em Cascata:** Funcionalidade para remover uma filial e, de forma segura e automática, todas as motos e vagas de pátio associadas a ela.
+- ❌ **Exclusão em Cascata:** Funcionalidade para remover uma filial e, de forma segura, apagar automaticamente todas as motos, problemas e vagas de pátio associadas.
 
-#### Pátio
-- 🅿️ **Visualização de Pátio:** Tela dinâmica que exibe o layout do pátio da filial selecionada.
-- 📊 **Status das Vagas:** Indicação visual para vagas livres e ocupadas, com estatísticas de ocupação.
+#### Pátio e Problemas
+- 🅿️ **Visualização de Pátio:** Tela dinâmica que exibe o layout do pátio da filial selecionada, com estatísticas e legenda.
+- 🤖 **Geração Automática de Vagas:** Ao cadastrar uma nova filial, o backend cria automaticamente todas as posições do pátio com base no número de linhas e colunas.
+- 📋 **Gestão de Problemas:** CRUD completo para reportar, editar e excluir problemas associados a uma moto.
+
+#### Notificações e Localização
+- 🔔 **Notificações Push:** O app pede permissão e registra o token de push do usuário no backend após o login. (Demonstrado no vídeo).
+- 🗣️ **Internacionalização (i18n):** Suporte completo para **Português** e **Espanhol**, com detecção automática do idioma do dispositivo.
+- ℹ️ **Tela "Sobre o App":** Apresenta a versão do app, o hash do commit de build e os desenvolvedores com suas fotos de perfil do GitHub.
+
+---
 
 ## 🛠️ Tecnologias Utilizadas
 
 #### Frontend (Mobile)
-- **React Native CLI**
-- **React Navigation:** Para gerenciamento de rotas e navegação.
+- **React Native (Expo)**
+- **React Navigation:** Para gerenciamento de rotas.
 - **Axios:** Para realizar as chamadas à API REST.
 - **React Context API:** Para gerenciamento de estado global (Autenticação e Tema).
+- **`i18next` & `expo-localization`:** Para internacionalização e detecção de idioma.
+- **`expo-notifications`:** Para registro e recebimento de Notificações Push.
+- **`expo-constants`:** Para ler configurações e o hash do commit.
+- **`react-native-dropdown-picker`:** Para menus de seleção customizados nos formulários.
 
-#### Backend
+#### Backend (Java)
 - **Java 17**
 - **Spring Boot 3:** Para a construção da API REST.
 - **Spring Data JPA:** Para a persistência de dados.
 - **Spring Security & JWT:** Para o controle de autenticação e autorização.
 - **H2 Database:** Banco de dados em memória para ambiente de desenvolvimento.
-- **Lombok**
-- **Swagger (Springdoc):** Para documentação da API.
+- **Docker:** Para criação da imagem de deploy.
+- **Render:** Plataforma de nuvem para deploy contínuo do backend.
+
+---
 
 ## 📁 Estrutura de Pastas
 
-A estrutura principal de pastas do projeto mobile foi organizada da seguinte forma para garantir a separação de responsabilidades:
+A estrutura principal de pastas do projeto mobile foi organizada da seguinte forma:
 
 ```
 assets/
-src/       
+└── images/         # Ícones e logos do aplicativo
+src/                # Código-fonte principal
 ├── components/     # Componentes reutilizáveis (ex: ThemeToggleButton)
 ├── contexts/       # Contextos globais (AuthContext, ThemeContext)
-├── locales/        # Arquivos de tradução (pt.json, en.json)
+├── locales/        # Arquivos de tradução (pt.json, es.json)
 ├── routes/         # Configuração da navegação do app (stack.routes.js)
 ├── screens/        # Telas principais do aplicativo (HomeScreen, LoginScreen, etc.)
-└── services/       # Configuração da API e outros serviços
+└── services/       # Configuração da API (api.js) e de Notificação
 ```
+
+---
 
 ## 🚀 Como Executar o Projeto
 
-Para executar a solução completa, você precisará rodar o **Backend (API)** e o **Frontend (Aplicativo Mobile)** separadamente.
+### **Backend (API)**
 
-### **1. Backend (Java - Spring Boot)**
+O backend da aplicação (API Java/Spring Boot) já está implantado na plataforma de nuvem **Render** e o aplicativo mobile já está configurado para se conectar a ela.
+
+> **Nota sobre o Deploy:** A API está hospedada no plano gratuito do Render. Se o servidor ficar inativo por um período, ele pode "dormir" para economizar recursos. A primeira requisição feita pelo app (como o login) pode demorar de 20 a 30 segundos para "acordar" o servidor. Após a primeira conexão, a aplicação funcionará em velocidade normal.
+
+### **Frontend (Aplicativo Mobile)**
+
+Para executar o aplicativo em um ambiente de desenvolvimento local (conectado à API na nuvem):
 
 **Pré-requisitos:**
-- JDK 17 ou superior
-
-- **Clone o Repositório:**
-    ```
-    git clone https://github.com/GuiJanunzzi/MottoMap-Java.git
-    ```
-
-#### **Opção A: Executando via Terminal (usando Maven Wrapper)**
-
-1.  Navegue até a pasta do projeto backend:
-    ```bash
-    cd MottoMap-Java
-    ```
-
-2.  Execute o projeto:
-    - No Windows:
-      ```bash
-      mvnw.cmd spring-boot:run
-      ```
-    - No Linux ou macOS:
-      ```bash
-      ./mvnw spring-boot:run
-      ```
-
-3.  O servidor iniciará e estará rodando em `http://localhost:8080`.
-
-#### **Opção B: Executando via IDE (VS Code, IntelliJ, Eclipse)**
-
-1.  Importe o projeto na sua IDE como um projeto Maven.
-2.  Aguarde a IDE baixar todas as dependências.
-3.  Encontre a classe principal da aplicação (geralmente `App.java` ou `MottomapApplication.java`).
-4.  Execute (Run) essa classe.
-
-### **2. Frontend (React Native)**
+- Node.js
+- Expo CLI
+- Emulador Android (Android Studio) ou o app Expo Go em um dispositivo físico
 
 1.  **Clone o Repositório:**
     ```bash
     git clone https://github.com/Dametto98/ChallengeMobile-MottoMap.git
     ```
-2.  **Instale as Dependências (Frontend):**
+2.  **Navegue até a pasta do projeto mobile:**
     ```bash
     cd ChallengeMobile-MottoMap
+    ```
+3.  **Instale as Dependências:**
+    ```bash
     npm install
     ```
-3.  **Configure a API:**
-    - No arquivo `src/services/api.js`, altere a variável `API_JAVA_URL` para o endereço de IP da máquina onde o backend está rodando.
-
-4.  **Execute o Backend:**
-    - Abra o projeto Java e execute a aplicação Spring Boot.
-
-5.  **Execute o Frontend:**
+4.  **Execute o Aplicativo:**
     ```bash
     npm start
     ```
-    *Certifique-se de que um emulador Android esteja aberto ou um dispositivo físico esteja conectado.*
-
-## ▶️ Demonstração do Aplicativo
-
-Assista ao vídeo de demonstração completa do **MotoMap** em funcionamento:
-
-[**Assista no YouTube**](https://youtu.be/z4Y53CZn9K8)
+5.  Abra o aplicativo no seu ambiente de teste:
+    - Pressione `a` para abrir no Emulador Android.
+    - Ou escaneie o QR Code com o app Expo Go no seu celular físico.
