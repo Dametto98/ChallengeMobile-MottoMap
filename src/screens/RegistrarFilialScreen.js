@@ -76,7 +76,7 @@ export default function RegistrarFilialScreen({ navigation }) {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.label}>{t("labelNomeFilial")}</Text>
+      <Text style={styles.label}>{t("labelFilial")}</Text>
       <TextInput
         style={styles.input}
         value={nome}
