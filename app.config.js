@@ -19,11 +19,15 @@ module.exports = {
     orientation: "portrait",
     icon: "./assets/images/mottomap-logo.png",
 
+    eas: {
+      projectId: "93e7bc80-ba2e-4c4c-9118-e9dac5071fc1",
+    },
+
     extra: {
       commitHash: commitHash,
       appVersion: appVersion,
       eas: {
-        projectId: "93e7bc80-ba2e-4c4c-9118-e9dac5071fc1"
+        projectId: "93e7bc80-ba2e-4c4c-9118-e9dac5071fc1",
       },
     },
 

@@ -1,9 +1,9 @@
 import { Alert, Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
-import { apiJava } from './api'; // Importamos nossa API
-import i18n from './i18n'; // Para traduzir as mensagens
+import Constants from 'expo-constants'; 
+import { apiJava } from './api';
+import i18n from '../services/i18n';
 
-// Define como as notificações devem se comportar com o app aberto
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -12,10 +12,11 @@ Notifications.setNotificationHandler({
   }),
 });
 
+const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+
 export async function registerForPushNotificationsAsync() {
   let token;
 
-  // Pede permissão
   const { status: existingStatus } = await Notifications.getPermissionsAsync();
   let finalStatus = existingStatus;
   if (existingStatus !== 'granted') {
@@ -27,10 +28,14 @@ export async function registerForPushNotificationsAsync() {
     return;
   }
 
-  // Obtém o Token de Push do Expo
+  if (!projectId) {
+    console.error("Erro ao obter o token de push: 'projectId' não encontrado no app.config.js. Verifique o bloco 'extra.eas.projectId'.");
+    return;
+  }
+
   try {
     token = (await Notifications.getExpoPushTokenAsync({
-      projectId: '389af45f-5ad5-4414-87e3-4c20e77a443d', 
+      projectId: projectId, 
     })).data;
     console.log("Token de Push obtido:", token);
   } catch (e) {
@@ -38,7 +43,7 @@ export async function registerForPushNotificationsAsync() {
     return;
   }
 
-  // Configurações para Android (canal de notificação)
+  // Configurações para Android
   if (Platform.OS === 'android') {
     Notifications.setNotificationChannelAsync('default', {
       name: 'default',
@@ -48,7 +53,6 @@ export async function registerForPushNotificationsAsync() {
     });
   }
 
-  // Envia o token para o seu backend Java
   if (token) {
     try {
       await apiJava.post('/usuario/register-token', { token: token });
