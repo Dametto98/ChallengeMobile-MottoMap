@@ -1,15 +1,24 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import * as Localization from 'expo-localization'; // 1. IMPORTE A BIBLIOTECA
+import * as Localization from 'expo-localization';
 
 import pt from '../locales/pt.json';
 import es from '../locales/es.json';
 
-const locales = Localization.getLocales();
 let deviceLanguage = 'pt'; // Padrão, caso algo falhe
 
-if (locales && locales.length > 0) {
-  deviceLanguage = locales[0].languageCode;
+try {
+  const locales = Localization.getLocales();
+  if (locales && locales.length > 0 && locales[0].languageCode) {
+    const langCode = locales[0].languageCode;
+    // Só aceita 'pt' ou 'es', caso contrário usa o padrão
+    if (langCode === 'pt' || langCode === 'es') {
+      deviceLanguage = langCode;
+    }
+  }
+} catch (error) {
+  console.warn('[i18n] Erro ao obter idioma do dispositivo:', error);
+  // Mantém o padrão 'pt'
 }
 
 i18n
@@ -28,7 +37,12 @@ i18n
 
     interpolation: {
       escapeValue: false,
-    }
+    },
+
+    // Previne erros em caso de chaves faltando
+    react: {
+      useSuspense: false,
+    },
   });
 
 export default i18n;

@@ -12,53 +12,73 @@ Notifications.setNotificationHandler({
   }),
 });
 
-const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+let projectId;
+try {
+  projectId = Constants.expoConfig?.extra?.eas?.projectId;
+} catch (error) {
+  console.warn('[notificationService] Erro ao obter projectId:', error);
+}
 
 export async function registerForPushNotificationsAsync() {
-  let token;
-
-  const { status: existingStatus } = await Notifications.getPermissionsAsync();
-  let finalStatus = existingStatus;
-  if (existingStatus !== 'granted') {
-    const { status } = await Notifications.requestPermissionsAsync();
-    finalStatus = status;
-  }
-  if (finalStatus !== 'granted') {
-    Alert.alert(i18n.t('alertError'), "Falha ao obter permissão para notificações!");
-    return;
-  }
-
-  if (!projectId) {
-    console.error("Erro ao obter o token de push: 'projectId' não encontrado no app.config.js. Verifique o bloco 'extra.eas.projectId'.");
-    return;
-  }
-
   try {
-    token = (await Notifications.getExpoPushTokenAsync({
-      projectId: projectId, 
-    })).data;
-    console.log("Token de Push obtido:", token);
-  } catch (e) {
-    console.error("Erro ao obter o token de push:", e);
-    return;
-  }
+    let token;
 
-  // Configurações para Android
-  if (Platform.OS === 'android') {
-    Notifications.setNotificationChannelAsync('default', {
-      name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C',
-    });
-  }
-
-  if (token) {
     try {
-      await apiJava.post('/usuario/register-token', { token: token });
-      console.log("Token enviado para o backend com sucesso.");
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        console.warn('[notificationService] Permissão de notificação negada');
+        return;
+      }
     } catch (error) {
-      console.error("Erro ao enviar o token para o backend:", error);
+      console.warn('[notificationService] Erro ao solicitar permissões:', error);
+      return;
     }
+
+    if (!projectId) {
+      console.warn("[notificationService] 'projectId' não encontrado no app.config.js. Notificações push não serão registradas.");
+      return;
+    }
+
+    try {
+      token = (await Notifications.getExpoPushTokenAsync({
+        projectId: projectId, 
+      })).data;
+      console.log("[notificationService] Token de Push obtido:", token);
+    } catch (e) {
+      console.error("[notificationService] Erro ao obter o token de push:", e);
+      return;
+    }
+
+    // Configurações para Android
+    if (Platform.OS === 'android') {
+      try {
+        await Notifications.setNotificationChannelAsync('default', {
+          name: 'default',
+          importance: Notifications.AndroidImportance.MAX,
+          vibrationPattern: [0, 250, 250, 250],
+          lightColor: '#FF231F7C',
+        });
+      } catch (error) {
+        console.warn('[notificationService] Erro ao configurar canal de notificação Android:', error);
+      }
+    }
+
+    if (token) {
+      try {
+        await apiJava.post('/usuario/register-token', { token: token });
+        console.log("[notificationService] Token enviado para o backend com sucesso.");
+      } catch (error) {
+        console.error("[notificationService] Erro ao enviar o token para o backend:", error);
+        // Não lança erro, apenas loga, para não quebrar o fluxo de login
+      }
+    }
+  } catch (error) {
+    console.error("[notificationService] Erro geral no registro de notificações:", error);
+    // Não lança erro para não quebrar o fluxo de login
   }
 }

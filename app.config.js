@@ -18,17 +18,16 @@ module.exports = {
     version: appVersion,
     orientation: "portrait",
     icon: "./assets/images/mottomap-logo.png",
-
-    eas: {
-      projectId: "93e7bc80-ba2e-4c4c-9118-e9dac5071fc1",
-    },
+    plugins: [
+      "expo-localization"
+    ],
 
     extra: {
       commitHash: commitHash,
       appVersion: appVersion,
-      eas: {
-        projectId: "93e7bc80-ba2e-4c4c-9118-e9dac5071fc1",
-      },
+      "eas": {
+        "projectId": "7a54977e-b8a7-4cca-b3a8-259f274c34ae"
+      }
     },
 
     splash: {
@@ -46,6 +45,10 @@ module.exports = {
         backgroundColor: "#121212",
       },
       package: "com.mottomap.app",
+      permissions: [
+        "RECEIVE_BOOT_COMPLETED",
+        "VIBRATE",
+      ],
     },
     web: {
       favicon: "./assets/images/mottomap-logo.png",

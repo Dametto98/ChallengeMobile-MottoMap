@@ -43,24 +43,48 @@ export function useTheme() {
 }
 
 export default function ThemeProvider({ children }) {
-  const colorScheme = Appearance.getColorScheme();
-  const [theme, setTheme] = useState(colorScheme || "light");
+  let initialColorScheme = "light";
+  try {
+    const colorScheme = Appearance.getColorScheme();
+    initialColorScheme = colorScheme || "light";
+  } catch (error) {
+    console.warn('[ThemeContext] Erro ao obter colorScheme:', error);
+  }
+  
+  const [theme, setTheme] = useState(initialColorScheme);
 
   useEffect(() => {
-    const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-      setTheme(colorScheme);
-    });
-    return () => subscription.remove();
+    let subscription;
+    try {
+      subscription = Appearance.addChangeListener(({ colorScheme }) => {
+        setTheme(colorScheme || "light");
+      });
+    } catch (error) {
+      console.warn('[ThemeContext] Erro ao adicionar listener:', error);
+    }
+    
+    return () => {
+      if (subscription && subscription.remove) {
+        try {
+          subscription.remove();
+        } catch (error) {
+          console.warn('[ThemeContext] Erro ao remover listener:', error);
+        }
+      }
+    };
   }, []);
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
+  // Garante que sempre temos um tema válido
+  const safeTheme = theme === "dark" ? "dark" : "light";
+  
   const value = {
-    theme,
+    theme: safeTheme,
     toggleTheme,
-    colors: themeColors[theme],
+    colors: themeColors[safeTheme] || themeColors.light,
   };
 
   return (

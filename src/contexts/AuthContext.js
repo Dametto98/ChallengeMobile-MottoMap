@@ -17,7 +17,15 @@ export const AuthProvider = ({ children }) => {
                 const storagedToken = await AsyncStorage.getItem('@MottoMap:token');
 
                 if (storagedUser && storagedToken) {
-                    setUser(JSON.parse(storagedUser));
+                    try {
+                        const parsedUser = JSON.parse(storagedUser);
+                        setUser(parsedUser);
+                    } catch (parseError) {
+                        console.error("[AuthContext] Erro ao fazer parse do usuário:", parseError);
+                        // Limpa dados corrompidos
+                        await AsyncStorage.removeItem('@MottoMap:user');
+                        await AsyncStorage.removeItem('@MottoMap:token');
+                    }
                 }
             } catch (e) {
                 console.error("[AuthContext] Erro ao carregar dados do AsyncStorage:", e);
